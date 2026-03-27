@@ -1,13 +1,12 @@
 # Fdb version 4
-["xdvipdfmx"] 1774651152.83284 "out/proposal.xdv" "out/proposal.pdf" "out/proposal" 1774651153.02682 0
-  "out/proposal.xdv" 1774651152.81103 19088 5d59cc760989abf55109d2973bb9b551 "xelatex"
+["xdvipdfmx"] 1774653063.9246 "out/proposal.xdv" "out/proposal.pdf" "out/proposal" 1774653064.11739 0
+  "out/proposal.xdv" 1774653063.90202 10352 0566c035d92f93fae18407580e2cdfee "xelatex"
   (generated)
   "out/proposal.pdf"
   (rewritten before read)
-["xelatex"] 1774651152.53314 "/Users/yinghuang/Desktop/BU/NLP/Final project/proposal.tex" "out/proposal.xdv" "proposal" 1774651153.02623 0
-  "/Users/yinghuang/Desktop/BU/NLP/Final project/proposal.tex" 1774651152.13727 7101 1355781fca7959422fe3c316eff351a2 ""
+["xelatex"] 1774653063.59598 "/Users/yinghuang/Desktop/BU/NLP/Final project/proposal.tex" "out/proposal.xdv" "proposal" 1774653064.11668 0
+  "/Users/yinghuang/Desktop/BU/NLP/Final project/proposal.tex" 1774653063.5229 6992 8782ecad3d843063e38a90b79d9ffca1 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
-  "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/helvetic/phvb.tfm" 1136768653 2300 14616918391efa49ac8b481a75fbdc1a ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/times/ptmb8t.tfm" 1136768653 6880 f19b8995b61c334d78fc734065f6b4d4 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/times/ptmr8c.tfm" 1136768653 1352 fa28a7e6d323c65ce7d13d5342ff6be2 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/times/ptmr8t.tfm" 1136768653 6672 e3ab9e37e925f3045c9005e6d1473d56 ""
@@ -23,6 +22,7 @@
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm" 1136768653 1124 6c73e740cf17375f03eec0ee63599741 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm" 1136768653 1116 933a60c408fc0a863a92debe84b2d294 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm" 1136768653 1120 8b7d695260f3cff42e636090a8002094 ""
+  "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/inconsolata/t1-zi4r-0.tfm" 1558214095 1328 8f7396ab15954094ca9576957bd516dd ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/latex-fonts/lasy10.tfm" 1136768653 520 82a3d37183f34b6eb363a161dfc002c2 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/latex-fonts/lasy6.tfm" 1136768653 520 4889cce2180234b97cad636b6039c722 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/latex-fonts/lasy8.tfm" 1136768653 520 7bb3abb160b19e0ed6ac404bb59052b7 ""
@@ -73,10 +73,10 @@
   "/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def" 1730838014 14249 ff700eb13ce975a424b2dd99b1a83044 ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def" 1730838014 117112 7533bff456301d32e6d6356fad15f543 ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/inconsolata.sty" 1558214095 4327 344b968526dbd149d23066f8b2160aa4 ""
+  "/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/t1zi4.fd" 1516054831 1021 03341d1cf7f388bbac1915f944d5d128 ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty" 1655478651 22555 6d8e155cfef6d82c3d5c742fea7c992e ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty" 1665067230 13815 760b0c02f691ea230f5359c4e1de23a7 ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-xetex.def" 1716410060 31593 96a7f07a08af85a2bbfee2e0a9cdbb50 ""
-  "/usr/local/texlive/2025/texmf-dist/tex/latex/lineno/lineno.sty" 1738182647 154882 28bfba3d27ac868f944c98d1dd51fd65 ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/microtype-xetex.def" 1739394495 28582 05df45896f96323df292cf513c6771dc ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/microtype.cfg" 1739394495 27015 bd167d0154f271c424b157d8894ae4a4 ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/microtype.sty" 1739394495 102775 6624742dafeb6f262a13657f9f77f048 ""
@@ -96,9 +96,9 @@
   "/usr/local/texlive/2025/texmf-var/web2c/xetex/xelatex.fmt" 1741450550 5639796 b6822fbf027c6598cec2e241e0925725 ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
   "acl.sty" 1774643427.31232 11615 e2c027f483aa40e577ed34264c8b0655 ""
-  "out/proposal.aux" 1774651152.81035 2372 7b828e629fe794b5344c4058f9254ab6 "xelatex"
-  "out/proposal.out" 1774651152.81087 872 ccc6a4ebb5ff185e62c0f569bda8ed1c "xelatex"
-  "proposal.tex" 1774651152.13727 7101 1355781fca7959422fe3c316eff351a2 ""
+  "out/proposal.aux" 1774653063.90161 939 00ea9d8e2531a84fe860a7eae7d3e1c4 "xelatex"
+  "out/proposal.out" 1774653063.90188 872 ccc6a4ebb5ff185e62c0f569bda8ed1c "xelatex"
+  "proposal.tex" 1774653063.5229 6992 8782ecad3d843063e38a90b79d9ffca1 ""
   (generated)
   "out/proposal.aux"
   "out/proposal.log"
