@@ -1,0 +1,131 @@
+\documentclass[11pt]{article}
+
+% Change "review" to "final" to generate the final (sometimes called camera-ready) version.
+% Change to "preprint" to generate a non-anonymous version with page numbers.
+\usepackage[review]{acl}
+
+% Standard package includes
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{booktabs} 
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+\usepackage[T1]{fontenc}
+% For Vietnamese characters
+% \usepackage[T5]{fontenc}
+% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
+
+% This assumes your files are encoded as UTF8
+\usepackage[utf8]{inputenc}
+
+% This is not strictly necessary, and may be commented out,
+% but it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+
+% This is also not strictly necessary, and may be commented out.
+% However, it will improve the aesthetics of text in
+% the typewriter font.
+\usepackage{inconsolata}
+
+%Including images in your LaTeX document requires adding
+%additional package(s)
+\usepackage{graphicx}
+
+% If the title and author information does not fit in the area allocated, uncomment the following
+%
+%\setlength\titlebox{<dim>}
+%
+% and set <dim> to something 5cm or larger.
+
+\title{An Empirical Analysis of Hallucination Behavior in Large Language Models: A Medical Domain Perspective}
+
+\author{First Author \\
+  Affiliation / Address line 1 \\
+  Affiliation / Address line 2 \\
+  Affiliation / Address line 3 \\
+  \texttt{email@domain} \\\And
+  Second Author \\
+  Affiliation / Address line 1 \\
+  Affiliation / Address line 2 \\
+  Affiliation / Address line 3 \\
+  \texttt{email@domain} \\}
+
+\begin{document}
+\maketitle
+
+\section{Motivation}
+
+Large Language Models (LLMs) have demonstrated remarkable capabilities in generating fluent, contextually relevant text. However, they frequently produce hallucinations — outputs that appear plausible but are factually incorrect, unsupported, or fabricated. This problem is especially critical in high-stakes domains such as medicine, where incorrect information can have serious real-world consequences.
+\\
+While hallucination has been studied in general NLP settings, relatively little empirical work systematically characterizes hallucination behavior specifically within the medical domain — where ground truth is verifiable, the cost of error is high, and LLMs are increasingly being adopted (e.g., in clinical decision support and patient-facing chatbots).
+\\
+This project conducts a controlled empirical study of hallucination patterns across multiple LLMs on medical question answering and summarization tasks, evaluating the effect of prompting strategies on hallucination rates.
+
+\section{Research Questions}
+\begin{itemize}
+    \item \textbf{How frequently do different LLMs hallucinate on medical questions?} Compare hallucination rates across model families on standardized medical QA benchmarks.
+    \item \textbf{Does retrieval-augmented prompting (RAG) reduce hallucinations in medical contexts?} Test whether grounding LLM responses in retrieved clinical text reduces factual errors.
+    \item \textbf{Do hallucinations increase with longer medical contexts? } Examine whether longer clinical notes or research abstracts correlate with more hallucinated outputs.
+    \item \textbf{What types of medical prompts elicit more hallucinations?} Compare diagnostic reasoning questions, pharmacology queries, and clinical summarization to identify higher-risk prompt categories.
+\end{itemize}
+
+\section{Task Definition}
+Evaluate LLMs on two medical NLP tasks where hallucinations can be objectively identified against verified ground truth:
+\\
+\textbf{Medical Factual QA} — Multiple-choice and open-ended questions drawn from medical licensing exam datasets. Example: "What is the first-line treatment for community-acquired pneumonia in an outpatient adult?"
+\\
+\textbf{Context-Grounded Medical QA} — A medical abstract or clinical note is provided, and the model is asked questions that must be answered based only on the provided context. Hallucinations occur when the model introduces information absent from the source.
+\\
+\textbf{Medical Summarization} — The model summarizes a clinical note or research abstract. Hallucinations are identified as claims not supported by the source document.
+\\
+A hallucination is defined as: any generated output that contains information not supported by the provided input context or verified medical ground truth.
+
+\section{Data Set}
+\textbf{Primary Dataset --- MedQA (USMLE):} \textasciitilde 12,000 multiple-choice questions from US Medical Licensing Examinations. Gold-standard answers for precise hallucination rate measurement. Available on HuggingFace (bigbio/med\_qa). This is our main benchmark for RQ1 and RQ4.\\
+\textbf{Secondary Dataset — PubMedQA:} \textasciitilde 1,000 expert-annotated yes/no/maybe questions derived from PubMed research abstracts. The abstracts serve as context, ideal for the RAG condition (RQ2) and long-context analysis (RQ3). Available on HuggingFace (qiaojin/PubMedQA).\\
+\textbf{Tertiary Dataset — MedMCQA (optional):} \textasciitilde 194,000 multiple-choice questions from Indian medical entrance exams. \\
+
+\section{Models to Evaluate}
+We propose comparing 2–3 models across capability tiers:
+\begin{itemize}
+    \item \textbf{One capable proprietary or open-weight model} (e.g., Llama 3 70B or Mistral-7B-Instruct via HuggingFace, depending on compute access)
+    \item \textbf{One mid-size open-source model} (e.g., Mistral-7B or BioMistral-7B, a medically fine-tuned variant)
+    \item \textbf{One smaller baseline model} (e.g., Llama 3 8B or BioGPT)
+\end{itemize}
+Using a biomedically fine-tuned model (BioMistral or BioGPT) alongside a general-purpose model is a strong design choice — it lets you test whether domain-specific training actually reduces hallucinations.
+
+\section{Experimental Conditions}
+
+\begin{table}[ht]
+\centering
+\renewcommand{\arraystretch}{1.5} 
+\begin{tabular}{ll}
+\toprule
+\textbf{Condition} & \textbf{Description} \\
+\midrule
+Standard prompting & Zero-shot prompt with no additional context \\
+Chain-of-thought prompting & Ask the model to reason step-by-step before answering \\
+Retrieval-augmented (RAG) & Relevant PubMedQA abstract prepended as context \\
+Long-context & Extended clinical text provided (tests RQ3) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\section{Evaluation Metrics}
+\textbf{Quantitative:}
+\begin{itemize}
+    \item Hallucination rate (\% of outputs with at least one hallucinated claim)
+    \item Accuracy vs. gold-standard answers (for MedQA)
+    \item Faithfulness score (for summarization, using BERTScore or a lightweight NLI-based faithfulness checker such as MiniCheck)
+\end{itemize}
+\textbf{Qualitative Error Taxonomy:}
+\begin{itemize}
+    \item Fabricated clinical facts (e.g., invented drug dosages)
+    \item Incorrect diagnostic reasoning
+    \item Unsupported causal claims
+    \item Over-generalization from partial evidence
+\end{itemize}
+
+\end{document}
