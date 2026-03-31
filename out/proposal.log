@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  27 MAR 2026 19:11
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  31 MAR 2026 10:56
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -418,23 +418,6 @@ Underfull \hbox (badness 2326) in paragraph at lines 67--68
 Missing character: There is no — ("2014) in font ptmr8t!
 Missing character: There is no — ("2014) in font ptmr8t!
 Missing character: There is no — ("2014) in font ptmr8t!
-Missing character: There is no — ("2014) in font ptmb8t!
-Missing character: There is no — ("2014) in font ptmb8t!
-
-Underfull \hbox (badness 10000) in paragraph at lines 83--86
-\T1/ptm/b/n/10.95 Primary Dataset --- MedQA (USMLE):
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 83--86
-\T1/ptm/b/n/10.95 Tertiary Dataset  MedM-CQA (op-tional):
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 83--86
-
- []
-
 
 
 [1
@@ -442,27 +425,52 @@ Underfull \hbox (badness 10000) in paragraph at lines 83--86
 
 
 ]
-Missing character: There is no – ("2013) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmb8t!
+Missing character: There is no — ("2014) in font ptmb8t!
 
-Underfull \hbox (badness 3769) in paragraph at lines 91--92
+Underfull \hbox (badness 10000) in paragraph at lines 85--88
+\T1/ptm/b/n/10.95 Primary Dataset --- MedQA (USMLE):
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 85--88
+\T1/ptm/b/n/10.95 Tertiary Dataset  MedM-CQA (op-tional):
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 85--88
+
+ []
+
+
+Underfull \hbox (badness 3769) in paragraph at lines 92--93
 []\T1/ptm/b/n/10.95 One mid-size open-source model \T1/ptm/m/n/10.95 (e.g.,
  []
 
 
-Underfull \hbox (badness 1132) in paragraph at lines 91--92
+Underfull \hbox (badness 1132) in paragraph at lines 92--93
 \T1/ptm/m/n/10.95 Mistral-7B or BioMistral-7B, a med-i-cally
  []
 
-Missing character: There is no — ("2014) in font ptmr8t!
 
-Underfull \hbox (badness 2538) in paragraph at lines 94--95
-\T1/ptm/m/n/10.95 tral or BioGPT) along-side a general-purpose
+Underfull \hbox (badness 2005) in paragraph at lines 95--97
+\T1/ptm/m/n/10.95 u-ate if spe-cial-ized train-ing re-duces hal-lu-ci-na-
  []
 
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 101.
 
-Overfull \hbox (170.4648pt too wide) in paragraph at lines 101--111
+
+
+Underfull \hbox (badness 4505) in paragraph at lines 102--103
+[]\T1/ptm/m/n/10.95 Accuracy vs gold-standard an-swers (for
+ []
+
+
+
+[2]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 120.
+
+Overfull \hbox (203.01875pt too wide) in paragraph at lines 120--131
  [][] 
  []
 
@@ -470,21 +478,23 @@ Overfull \hbox (170.4648pt too wide) in paragraph at lines 101--111
 
 
 
-[2] (out/proposal.aux)
+[3
+
+] (out/proposal.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `proposal.out' has not changed.
-(rerunfilecheck)             Checksum: CCC6A4EBB5FF185E62C0F569BDA8ED1C;872.
+(rerunfilecheck)             Checksum: 0DAC4FFF6091DEFBD2FE01ADC80A1489;872.
  ) 
 Here is how much of TeX's memory you used:
  13311 strings out of 473832
  215878 string characters out of 5729482
- 652030 words of memory out of 5000000
+ 653030 words of memory out of 5000000
  36223 multiletter control sequences out of 15000+600000
  573923 words of font info for 62 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  87i,10n,93p,1053b,336s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on out/proposal.xdv (2 pages, 10352 bytes).
+Output written on out/proposal.xdv (3 pages, 11996 bytes).

@@ -66,9 +66,11 @@ This project conducts a controlled empirical study of hallucination patterns acr
     \item \textbf{Does retrieval-augmented prompting (RAG) reduce hallucinations in medical contexts?} Test whether grounding LLM responses in retrieved clinical text reduces factual errors.
     \item \textbf{Do hallucinations increase with longer medical contexts? } Examine whether longer clinical notes or research abstracts correlate with more hallucinated outputs.
     \item \textbf{What types of medical prompts elicit more hallucinations?} Compare diagnostic reasoning questions, pharmacology queries, and clinical summarization to identify higher-risk prompt categories.
+    \item \textbf{Which mitigation strategy (RAG, CoT, or Domain-specific Fine-tuning) is most effective in reducing medical hallucinations, and by what margin?} By comparing the Hallucination rates across different mitigation strategies, we can identify which approach is most effective in reducing hallucinations in medical contexts and quantify the improvement over standard prompting.
 \end{itemize}
 
 \section{Task Definition}
+The primary task of this project is to evaluate and benchmark the effectiveness of multiple hallucination mitigation strategies across different medical NLP challenges. Our task focuses on measuring the reduction in hallucination rates when applying different interventions.\\
 Evaluate LLMs on two medical NLP tasks where hallucinations can be objectively identified against verified ground truth:
 \\
 \textbf{Medical Factual QA} — Multiple-choice and open-ended questions drawn from medical licensing exam datasets. Example: "What is the first-line treatment for community-acquired pneumonia in an outpatient adult?"
@@ -77,22 +79,39 @@ Evaluate LLMs on two medical NLP tasks where hallucinations can be objectively i
 \\
 \textbf{Medical Summarization} — The model summarizes a clinical note or research abstract. Hallucinations are identified as claims not supported by the source document.
 \\
-A hallucination is defined as: any generated output that contains information not supported by the provided input context or verified medical ground truth.
+\textbf{A hallucination is defined as:} any generated output that contains information not supported by the provided input context or verified medical ground truth.
 
 \section{Data Set}
 \textbf{Primary Dataset --- MedQA (USMLE):} \textasciitilde 12,000 multiple-choice questions from US Medical Licensing Examinations. Gold-standard answers for precise hallucination rate measurement. Available on HuggingFace (bigbio/med\_qa). This is our main benchmark for RQ1 and RQ4.\\
 \textbf{Secondary Dataset — PubMedQA:} \textasciitilde 1,000 expert-annotated yes/no/maybe questions derived from PubMed research abstracts. The abstracts serve as context, ideal for the RAG condition (RQ2) and long-context analysis (RQ3). Available on HuggingFace (qiaojin/PubMedQA).\\
 \textbf{Tertiary Dataset — MedMCQA (optional):} \textasciitilde 194,000 multiple-choice questions from Indian medical entrance exams. \\
-
 \section{Models to Evaluate}
-We propose comparing 2–3 models across capability tiers:
+We propose comparing 2-3 models across capability tiers:
 \begin{itemize}
     \item \textbf{One capable proprietary or open-weight model} (e.g., Llama 3 70B or Mistral-7B-Instruct via HuggingFace, depending on compute access)
     \item \textbf{One mid-size open-source model} (e.g., Mistral-7B or BioMistral-7B, a medically fine-tuned variant)
     \item \textbf{One smaller baseline model} (e.g., Llama 3 8B or BioGPT)
 \end{itemize}
-Using a biomedically fine-tuned model (BioMistral or BioGPT) alongside a general-purpose model is a strong design choice — it lets you test whether domain-specific training actually reduces hallucinations.
+We will compare domain-specific models (BioMistral/BioGPT) with general-purpose ones to evaluate if specialized training reduces hallucinations.
+Furthermore, we will develop a custom medically-adapted baseline by fine-tuning a model via LoRA (PEFT) on MedQA/PubMedQA, benchmarking its performance against zero-shot and RAG-augmented approaches.
+\newpage
+\section{Evaluation Metrics}
+\textbf{Quantitative:}
+\begin{itemize}
+    \item Hallucination rate (\% of outputs with at least one hallucinated claim)
+    \item Accuracy vs gold-standard answers (for MedQA)
+    \item Faithfulness score (for summarization, using BERTScore or a lightweight NLI-based faithfulness checker such as MiniCheck)
+    \item Relative Reduction in Hallucination (RRH)
+\end{itemize}
+\textbf{Qualitative Error Taxonomy:}
+\begin{itemize}
+    \item Fabricated clinical facts (e.g., invented drug dosages)
+    \item Incorrect diagnostic reasoning
+    \item Unsupported causal claims
+    \item Over-generalization from partial evidence
+\end{itemize}
 
+\newpage
 \section{Experimental Conditions}
 
 \begin{table}[ht]
@@ -106,25 +125,9 @@ Standard prompting & Zero-shot prompt with no additional context \\
 Chain-of-thought prompting & Ask the model to reason step-by-step before answering \\
 Retrieval-augmented (RAG) & Relevant PubMedQA abstract prepended as context \\
 Long-context & Extended clinical text provided (tests RQ3) \\
+Custom fine-tuning & A base model fine-tuned on domain-specific medical QA pairs \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-\newpage
-
-\section{Evaluation Metrics}
-\textbf{Quantitative:}
-\begin{itemize}
-    \item Hallucination rate (\% of outputs with at least one hallucinated claim)
-    \item Accuracy vs. gold-standard answers (for MedQA)
-    \item Faithfulness score (for summarization, using BERTScore or a lightweight NLI-based faithfulness checker such as MiniCheck)
-\end{itemize}
-\textbf{Qualitative Error Taxonomy:}
-\begin{itemize}
-    \item Fabricated clinical facts (e.g., invented drug dosages)
-    \item Incorrect diagnostic reasoning
-    \item Unsupported causal claims
-    \item Over-generalization from partial evidence
-\end{itemize}
 
 \end{document}
