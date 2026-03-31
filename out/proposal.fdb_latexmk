@@ -1,11 +1,11 @@
 # Fdb version 4
-["xdvipdfmx"] 1774653063.9246 "out/proposal.xdv" "out/proposal.pdf" "out/proposal" 1774653064.11739 0
-  "out/proposal.xdv" 1774653063.90202 10352 0566c035d92f93fae18407580e2cdfee "xelatex"
+["xdvipdfmx"] 1774968971.6264 "out/proposal.xdv" "out/proposal.pdf" "out/proposal" 1774968971.8126 0
+  "out/proposal.xdv" 1774968971.60433 11996 b4d4cea8f395e262f06b61d58d4e8fea "xelatex"
   (generated)
   "out/proposal.pdf"
   (rewritten before read)
-["xelatex"] 1774653063.59598 "/Users/yinghuang/Desktop/BU/NLP/Final project/proposal.tex" "out/proposal.xdv" "proposal" 1774653064.11668 0
-  "/Users/yinghuang/Desktop/BU/NLP/Final project/proposal.tex" 1774653063.5229 6992 8782ecad3d843063e38a90b79d9ffca1 ""
+["xelatex"] 1774968971.32914 "/Users/yinghuang/Desktop/BU/NLP/Final project/proposal.tex" "out/proposal.xdv" "proposal" 1774968971.812 0
+  "/Users/yinghuang/Desktop/BU/NLP/Final project/proposal.tex" 1774968971.26342 7943 80bed7493085ef07276d5e79855f8360 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/times/ptmb8t.tfm" 1136768653 6880 f19b8995b61c334d78fc734065f6b4d4 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/times/ptmr8c.tfm" 1136768653 1352 fa28a7e6d323c65ce7d13d5342ff6be2 ""
@@ -96,9 +96,9 @@
   "/usr/local/texlive/2025/texmf-var/web2c/xetex/xelatex.fmt" 1741450550 5639796 b6822fbf027c6598cec2e241e0925725 ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
   "acl.sty" 1774643427.31232 11615 e2c027f483aa40e577ed34264c8b0655 ""
-  "out/proposal.aux" 1774653063.90161 939 00ea9d8e2531a84fe860a7eae7d3e1c4 "xelatex"
-  "out/proposal.out" 1774653063.90188 872 ccc6a4ebb5ff185e62c0f569bda8ed1c "xelatex"
-  "proposal.tex" 1774653063.5229 6992 8782ecad3d843063e38a90b79d9ffca1 ""
+  "out/proposal.aux" 1774968971.6037 939 c61d0cf0cc6f44c087b516036ee1c524 "xelatex"
+  "out/proposal.out" 1774968971.6042 872 0dac4fff6091defbd2fe01adc80a1489 "xelatex"
+  "proposal.tex" 1774968971.26342 7943 80bed7493085ef07276d5e79855f8360 ""
   (generated)
   "out/proposal.aux"
   "out/proposal.log"
