@@ -1,1 +1,4 @@
 datasets
+torch==2.2.2
+transformers==4.39.3
+numpy<2
