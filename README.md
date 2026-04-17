@@ -15,3 +15,10 @@ pip install -r requirements.txt
 ```python
  python load_dataset.py
 ```
+## Running the Model
+get token from Huggingface (following: https://huggingface.co/docs/hub/security-tokens)
+copy the token and paste it when running the following command:
+```bash
+huggingface-cli login
+python run.py
+```
