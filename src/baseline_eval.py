@@ -1,22 +1,13 @@
-from datasets import load_dataset
-import random
+from tqdm import tqdm
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
+import re
 import csv
-
-def load_medqa_sample(split='test', sample_size=200, seed=42):
-    dataset = load_dataset("bigbio/med_qa", "med_qa_en_4options_source", split=split)
-    random.seed(seed)
-    sampled_indices = random.sample(range(len(dataset)), min(sample_size, len(dataset)))
-    return dataset.select(sampled_indices)
-
-def build_medqa_prompt(example):
+#Standard (Zero-shot)
+def build_medqa_baseline_prompt(example):
     question = example['question']
     options = example['options']
-    option_lines = []
-    letters = ['A', 'B', 'C', 'D', 'E', 'F']
-    for i, option in enumerate(options):
-        option_lines.append(f"{letters[i]}. {option}")
+    option_lines = [f"{chr(65+i)}. {opt}" for i, opt in enumerate(options)]
     
     prompt = (
         "You are a medical expert. Please answer the following multiple-choice question:\n\n"
@@ -25,71 +16,115 @@ def build_medqa_prompt(example):
         "Answer (choose the correct option letter):"
     )
     return prompt
+#Chain-of-Thought (CoT)
+def build_medqa_cot_prompt(example):
+    question = example['question']
+    options = example['options']
+    option_lines = [f"{chr(65+i)}. {opt}" for i, opt in enumerate(options)]
+    
+    prompt = (
+        "You are a medical expert. Please answer the following multiple-choice question.\n"
+        "First, think step-by-step and explain your diagnostic reasoning.\n"
+        "Finally, conclude your response with the exact phrase: 'Therefore, the correct answer is [Letter]'.\n\n"
+        f"Question: {question}\n"
+        f"Options:\n" + "\n".join(option_lines) + "\n\n"
+        "Reasoning and Answer:"
+    )
+    return prompt
 
 def load_model(model_name):
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(model_name,
-        torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32,
-        device_map = "auto")
+    tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left")
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+        
+    model = AutoModelForCausalLM.from_pretrained(
+        model_name,
+        torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+        device_map="auto"
+    )
     return tokenizer, model
 
-def generate_answer(prompt, tokenizer, model, max_new_tokens=10):
-    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+def generate_answers_batch(prompts, tokenizer, model, max_new_tokens):
+    inputs = tokenizer(prompts, return_tensors="pt", padding=True, truncation=True).to(model.device)
     with torch.no_grad():
-        outputs = model.generate(**inputs, max_new_tokens=max_new_tokens, do_sample=False, temperature=0.0)
+        outputs = model.generate(
+            **inputs, 
+            max_new_tokens=max_new_tokens, 
+            do_sample=False, 
+            temperature=0.0
+        )
+    responses = tokenizer.batch_decode(outputs, skip_special_tokens=True)
+    return [resp[len(prompt):].strip() for prompt, resp in zip(prompts, responses)]
 
-    answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    return answer[len(prompt):].strip()
+def extract_answer_letter(text, mode="baseline"):
+    if mode == "cot":
+        match = re.search(r"correct answer is \[?([A-D])\]?", text, re.IGNORECASE)
+        if match: return match.group(1).upper()
+        matches = re.findall(r'\b([A-D])\b', text.upper())
+        return matches[-1] if matches else None
+    else:
+        # For baseline, the output should just be the letter
+        text_clean = text.strip().upper()
+        if text_clean and text_clean[0] in ['A', 'B', 'C', 'D']: return text_clean[0]
+        match = re.search(r'\b([A-D])\b', text_clean)
+        return match.group(1) if match else None
 
-def extract_answer_letter(answer):
-    output_text = answer.strip().upper()
-
-    if output_text in ['A', 'B', 'C', 'D', 'E', 'F']:
-        return output_text
+def evaluate_combined_batch(dataset, tokenizer, model, batch_size=8, output_csv='medqa_combined_results.csv'):
+    stats = {"baseline_correct": 0, "cot_correct": 0, "total": 0}
     
-    match = re.search(r'\b([A-F])\b', output_text)
-    if match:
-        return match.group(1)
-    return None
-
-def evaluate_medqa_baseline(dataset, tokenizer, model, output_csv='medqa_baseline_results.csv'):
-    total = 0
-    correct = 0
-    failed_to_extract = 0
-    
-    with open(output_csv, mode='w', newline='') as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=['question_id', 'prompt', 'model_output', 'predicted_answer', 'correct_answer', 'is_correct'])
+    with open(output_csv, mode='w', newline='', encoding='utf-8') as csv_file:
+        fieldnames = [
+            'question_id', 'correct_answer', 
+            'baseline_prediction', 'baseline_is_correct', 'baseline_output',
+            'cot_prediction', 'cot_is_correct', 'cot_output'
+        ]
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
 
-        for idx, example in enumerate(dataset):
-            prompt = build_medqa_prompt(example)
-            model_output = generate_answer(prompt, tokenizer, model)
-            predicted_answer = extract_answer_letter(model_output)
-            correct_answer = str(example['answer']).strip().upper()
-            is_correct = (predicted_answer == correct_answer)
+        for i in tqdm(range(0, len(dataset), batch_size), desc="Evaluating Batches"):
+            batch_examples = [dataset[idx] for idx in range(i, min(i + batch_size, len(dataset)))]
+            
+            # Baseline
+            baseline_prompts = [build_medqa_baseline_prompt(ex) for ex in batch_examples]
+            baseline_outputs = generate_answers_batch(baseline_prompts, tokenizer, model, max_new_tokens=10)
+            
+            # CoT
+            cot_prompts = [build_medqa_cot_prompt(ex) for ex in batch_examples]
+            cot_outputs = generate_answers_batch(cot_prompts, tokenizer, model, max_new_tokens=256)
+            
+            # Save Results
+            for j in range(len(batch_examples)):
+                ex = batch_examples[j]
+                
+                correct_ans_text = str(ex['answer']).strip()
+                correct_letter = "UNKNOWN"
+                for opt_idx, opt_text in enumerate(ex['options']):
+                    if str(opt_text).strip() == correct_ans_text:
+                        correct_letter = chr(65 + opt_idx) # A, B, C, D...
+                        break
+                
+                # get baseline prediction
+                base_pred = extract_answer_letter(baseline_outputs[j], mode="baseline")
+                base_correct = (base_pred == correct_letter)
+                
+                cot_pred = extract_answer_letter(cot_outputs[j], mode="cot")
+                cot_correct = (cot_pred == correct_letter)
 
-            writer.writerow({
-                'question_id': idx,
-                'prompt': prompt,
-                'model_output': model_output,
-                'predicted_answer': predicted_answer,
-                'correct_answer': correct_answer,
-                'is_correct': is_correct
-            })
+                writer.writerow({
+                    'question_id': i + j,
+                    'correct_answer': correct_letter,
+                    'baseline_prediction': base_pred,
+                    'baseline_is_correct': base_correct,
+                    'baseline_output': baseline_outputs[j],
+                    'cot_prediction': cot_pred,
+                    'cot_is_correct': cot_correct,
+                    'cot_output': cot_outputs[j]
+                })
 
-            total += 1
-            if is_correct:
-                correct += 1
-            if predicted_answer is None:
-                failed_to_extract += 1
+                stats["total"] += 1
+                if base_correct: stats["baseline_correct"] += 1
+                if cot_correct: stats["cot_correct"] += 1
+            
+            csv_file.flush()
         
-        accuracy = correct / total if total > 0 else 0.0
-        hallucination_rate = 1.0 - accuracy
-
-        return {
-            "total": total,
-            "correct": correct,
-            "accuracy": accuracy,
-            "hallucination_rate": hallucination_rate,
-            "failed_to_extract": failed_to_extract
-        }
+        return stats
