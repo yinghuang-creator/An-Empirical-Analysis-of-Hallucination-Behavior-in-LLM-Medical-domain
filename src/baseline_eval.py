@@ -3,6 +3,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import re
 import csv
+import os
 #Standard (Zero-shot)
 def build_medqa_baseline_prompt(example):
     question = example['question']
@@ -33,16 +34,32 @@ def build_medqa_cot_prompt(example):
     return prompt
 
 def load_model(model_name):
-    tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left")
-    if tokenizer.pad_token is None:
-        tokenizer.pad_token = tokenizer.eos_token
-        
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-        device_map="auto"
-    )
-    return tokenizer, model
+    hf_token = os.getenv("HF_TOKEN") or os.getenv("HUGGINGFACE_TOKEN")
+    shared_kwargs = {"token": hf_token} if hf_token else {}
+
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left", **shared_kwargs)
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+            device_map="auto",
+            **shared_kwargs,
+        )
+        return tokenizer, model
+    except OSError as e:
+        message = str(e).lower()
+        if "gated repo" in message or "403" in message or "not in the authorized list" in message:
+            raise RuntimeError(
+                f"Cannot access model '{model_name}'. It appears to be gated/private. "
+                "Either: (1) request access and login with 'huggingface-cli login', "
+                "or (2) set a public model via MODEL_NAME env var, e.g. "
+                "MODEL_NAME=Qwen/Qwen2.5-3B-Instruct. "
+                "If you already have access, set HF_TOKEN/HUGGINGFACE_TOKEN in your environment."
+            ) from e
+        raise
 
 def generate_answers_batch(prompts, tokenizer, model, max_new_tokens):
     inputs = tokenizer(prompts, return_tensors="pt", padding=True, truncation=True).to(model.device)

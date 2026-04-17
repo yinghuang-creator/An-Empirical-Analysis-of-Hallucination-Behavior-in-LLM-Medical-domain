@@ -7,9 +7,9 @@ from baseline_eval import load_model, evaluate_combined_batch
 
 def main():
     # Configurations
-    MODEL_NAME = "meta-llama/Llama-3.2-3B-Instruct"  
-    NUM_SAMPLES = 200                                
-    BATCH_SIZE = 8                                   
+    MODEL_NAME = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-3B-Instruct")
+    NUM_SAMPLES = 200
+    BATCH_SIZE = 8
     
     # Set the output path
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -22,6 +22,8 @@ def main():
     
     # Load model and tokenizer
     print(f"Loading model: {MODEL_NAME}...")
+    if os.getenv("HF_TOKEN") or os.getenv("HUGGINGFACE_TOKEN"):
+        print("Using Hugging Face token from environment.")
     tokenizer, model = load_model(MODEL_NAME)
     
     # Start combined evaluation
