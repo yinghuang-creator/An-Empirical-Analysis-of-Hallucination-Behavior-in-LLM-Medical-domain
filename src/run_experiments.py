@@ -9,6 +9,9 @@ Usage:
   python run_experiments.py --runs all             # run everything
   python run_experiments.py --runs 7 --n 50        # quick smoke test (n=50)
 """
+import os
+os.environ["HF_HOME"] = f"/projectnb/cs505am/projects/empirical_hallucination/hf_cache"
+os.environ["TRANSFORMERS_CACHE"] = os.environ["HF_HOME"]
 
 import argparse, json
 from pathlib import Path
@@ -23,7 +26,7 @@ OUT.mkdir(exist_ok=True)
 
 # ── Model checkpoint paths ────────────────────────────────────────────────────
 MODELS = {
-    "llama3":    "meta-llama/Meta-Llama-3-8B-Instruct",  # or mistralai/Mistral-7B-Instruct-v0.3
+    "llama3":    "meta-llama/Meta-Llama-3.1-8B-Instruct",  # or mistralai/Mistral-7B-Instruct-v0.3
     "biomistral":"BioMistral/BioMistral-7B",
     "biogpt":    "microsoft/biogpt",
     "biogpt_sft":"checkpoints/biogpt-medqa/best",       # set after finetune.py runs

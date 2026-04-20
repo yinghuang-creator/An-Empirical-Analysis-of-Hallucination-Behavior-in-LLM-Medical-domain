@@ -42,10 +42,10 @@ def build_prompt_medqa(
             "Think step by step before giving your final answer. "
             "End your response with 'Answer: <letter>'."
         )
-        suffix = ""
+        suffix = "\n\nAnswer: "
     else:
         instruction = "Answer with only the letter of the correct option (A, B, C, or D)."
-        suffix = "\n\nThe correct answer is"
+        suffix = "\n\nAnswer: "
 
     if condition == "rag" and context:
         rag_block = f"Context:\n{context}\n\n"
@@ -59,7 +59,7 @@ def build_prompt_medqa(
         f"{instruction}"
         f"{suffix}"
     )
-    
+
 def build_prompt_pubmedqa(
     sample: QASample,
     condition: Condition,
@@ -129,6 +129,7 @@ class ModelRunner:
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
+            # token = True,
             torch_dtype=torch.float16,
             # device_map=device,
         ).to(device)
