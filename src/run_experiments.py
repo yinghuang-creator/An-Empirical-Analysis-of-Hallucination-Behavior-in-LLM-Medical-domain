@@ -26,7 +26,8 @@ OUT.mkdir(exist_ok=True)
 
 # ── Model checkpoint paths ────────────────────────────────────────────────────
 MODELS = {
-    "llama3":    "meta-llama/Meta-Llama-3.1-8B-Instruct",  # or mistralai/Mistral-7B-Instruct-v0.3
+    # "mistralinstruct":    "mistralai/Mistral-7B-Instruct-v0.3",
+    "llama3":   "meta-llama/Meta-Llama-3-8B-Instruct", 
     "biomistral":"BioMistral/BioMistral-7B",
     "biogpt":    "microsoft/biogpt",
     "biogpt_sft":"checkpoints/biogpt-medqa/best",       # set after finetune.py runs
@@ -85,6 +86,9 @@ def run_one(
 def build_matrix(medqa, pubmedqa, medqa_map, pubmedqa_map, retriever):
     # (run_id, model_key, condition, samples, sample_map, retriever, minicheck)
     return [
+        # ( 1, "mistralinstruct",     "zero_shot", medqa,    medqa_map,    None,      False),
+        # ( 2, "mistralinstruct",     "cot",       medqa,    medqa_map,    None,      False),
+        # ( 3, "mistralinstruct",     "rag",       pubmedqa, pubmedqa_map, retriever, True ),
         ( 1, "llama3",     "zero_shot", medqa,    medqa_map,    None,      False),
         ( 2, "llama3",     "cot",       medqa,    medqa_map,    None,      False),
         ( 3, "llama3",     "rag",       pubmedqa, pubmedqa_map, retriever, True ),
