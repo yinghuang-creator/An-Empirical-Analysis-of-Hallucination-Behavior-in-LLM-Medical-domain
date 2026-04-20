@@ -8,7 +8,7 @@ import re
 import json
 from dataclasses import dataclass, field
 from typing import Optional, Literal
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 
 from load_dataset import QASample
@@ -23,7 +23,7 @@ class InferenceResult:
     condition: Condition
     raw_output: str
     extracted_answer: Optional[str]  # letter for MedQA; yes/no/maybe for PubMedQA
-    is_hallucination: Optional[bool] = field(default=None) # filled in by evaluate.py = field(default=None)
+    is_hallucination: Optional[bool] = field(default=None)
     prompt_used: str = field(default="", repr=False)
 
 
@@ -60,13 +60,12 @@ def build_prompt_medqa(
         f"{suffix}"
     )
 
+
 def build_prompt_pubmedqa(
     sample: QASample,
     condition: Condition,
     context: Optional[str] = None,
 ) -> str:
-    # only use context if explicitly passed (RAG condition)
-    # never fall back to sample.context here — that's for evaluate.py only
     if context:
         return (
             f"Context:\n{context}\n\n"
@@ -95,7 +94,6 @@ def extract_answer(text: str, source: str) -> Optional[str]:
     """Pull out the structured answer from raw model output."""
     text = text.strip()
     if source == "medqa":
-        # Look for explicit "Answer: X" first (CoT), then bare letter
         m = re.search(r"Answer:\s*([A-D])", text, re.IGNORECASE)
         if m:
             return m.group(1).upper()
@@ -115,67 +113,84 @@ def extract_answer(text: str, source: str) -> Optional[str]:
 
 # ── Model runner ────────────────────────────────────────────────────────────
 class ModelRunner:
-    """
-    Thin wrapper around a HuggingFace causal-LM pipeline.
-    Supports any checkpoint loadable via AutoModelForCausalLM.
-
-    Usage:
-        runner = ModelRunner("microsoft/biogpt")
-        results = runner.run(samples, condition="zero_shot")
-    """
     def __init__(self, model_name: str, device: str = "cuda"):
         self.model_name = model_name
         print(f"Loading {model_name}...")
+        print(f"CUDA available: {torch.cuda.is_available()}")
+
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        # BioGPT and Mistral have no pad token by default — use EOS
+        if self.tokenizer.pad_token is None:
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+        # left-padding for decoder-only models during batched inference
+        self.tokenizer.padding_side = "left"
+
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
-            # token = True,
             torch_dtype=torch.float16,
-            # device_map=device,
-        ).to(device)
-        self.pipe = pipeline(
-            "text-generation",
-            model=self.model,
-            tokenizer=self.tokenizer,
-            # device=0 if device == "cuda" else -1,
-            max_new_tokens=256,
-            do_sample=False,         # greedy for reproducibility
-            temperature=None,
-            top_p=None,
-            return_full_text=False,   # <-- add this
+            device_map="cuda" if torch.cuda.is_available() else "cpu",
         )
+        self.model.eval()
 
     def run(
         self,
         samples: list[QASample],
         condition: Condition,
         contexts: Optional[list[Optional[str]]] = None,
+        batch_size: int = 8,
     ) -> list[InferenceResult]:
-        """
-        Run inference on a list of samples.
-        contexts: optional list of retrieved contexts (one per sample, for RAG).
-        """
         results = []
         contexts = contexts or [None] * len(samples)
 
-        for sample, ctx in zip(samples, contexts):
-            prompt = build_prompt(sample, condition, ctx)
-            # guard: warn if prompt is dangerously long
-            prompt_tokens = len(self.tokenizer(prompt)["input_ids"])
-            if prompt_tokens > 768:  # leaves ~256 tokens for generation
-                print(f"WARNING: prompt for {sample.id} is {prompt_tokens} tokens — may truncate output")
-    
-            output = self.pipe(prompt)[0]["generated_text"]
-            # strip the prompt prefix that the pipeline echoes back
-            generated = output.strip() # generated = output[len(prompt):].strip()
-            results.append(InferenceResult(
-                sample_id=sample.id,
-                model_name=self.model_name,
-                condition=condition,
-                raw_output=generated,
-                extracted_answer=extract_answer(generated, sample.source),
-                prompt_used=prompt,
-            ))
+        for batch_start in range(0, len(samples), batch_size):
+            batch_samples  = samples[batch_start: batch_start + batch_size]
+            batch_contexts = contexts[batch_start: batch_start + batch_size]
+
+            prompts = [
+                build_prompt(s, condition, ctx)
+                for s, ctx in zip(batch_samples, batch_contexts)
+            ]
+
+            # warn on long prompts before tokenizing
+            for s, prompt in zip(batch_samples, prompts):
+                prompt_tokens = len(self.tokenizer(prompt)["input_ids"])
+                if prompt_tokens > 768:
+                    print(f"WARNING: prompt for {s.id} is {prompt_tokens} tokens — may truncate")
+
+            inputs = self.tokenizer(
+                prompts,
+                return_tensors="pt",
+                padding=True,
+                truncation=True,
+                max_length=512,
+            ).to(self.model.device)
+
+            with torch.no_grad():
+                outputs = self.model.generate(
+                    **inputs,
+                    max_new_tokens=64,   # letter or yes/no/maybe — 64 is plenty
+                    do_sample=False,     # greedy, reproducible
+                    pad_token_id=self.tokenizer.eos_token_id,
+                )
+
+            # decode only newly generated tokens — strip the prompt prefix
+            prompt_len = inputs["input_ids"].shape[1]
+            for s, output_ids, prompt in zip(batch_samples, outputs, prompts):
+                generated = self.tokenizer.decode(
+                    output_ids[prompt_len:],
+                    skip_special_tokens=True,
+                ).strip()
+                results.append(InferenceResult(
+                    sample_id=s.id,
+                    model_name=self.model_name,
+                    condition=condition,
+                    raw_output=generated,
+                    extracted_answer=extract_answer(generated, s.source),
+                    prompt_used=prompt,
+                ))
+
+            print(f"  [{batch_start + len(batch_samples)}/{len(samples)}] batches done")
+
         return results
 
     def save(self, results: list[InferenceResult], path: str):
@@ -187,15 +202,13 @@ class ModelRunner:
 # ── Quick smoke-test ─────────────────────────────────────────────────────────
 if __name__ == "__main__":
     from load_dataset import load_pubmedqa, stratified_sample
-    samples = stratified_sample(load_pubmedqa("test"), n=5)
-    device = torch.device("cuda") if (torch.cuda.is_available()) else torch.device("cpu")
+    samples = stratified_sample(load_pubmedqa("train"), n=5)
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    runner = ModelRunner("microsoft/biogpt", device = device)
-    
+    runner = ModelRunner("microsoft/biogpt", device=device)
     results = runner.run(samples, condition="zero_shot")
     for r in results:
         print(f"{r.sample_id}: extracted={r.extracted_answer!r}")
         print(f"  raw: {r.raw_output[:120]}")
         print()
-
     runner.save(results, "outputs/biogpt_zero_shot.json")
