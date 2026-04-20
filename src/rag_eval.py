@@ -100,21 +100,27 @@ def generate_answers_batch(prompts, tokenizer, model, max_new_tokens=50):
 
 # ── Extract yes/no/maybe prediction ───────────────────────────────────────────
 def extract_decision(text):
-    """
-    Extract yes/no/maybe from model output.
-    """
     text_lower = text.lower().strip()
-
-    # Check for exact match first
+    
+    # Check for "Answer: Yes/No/Maybe" pattern
+    import re
+    match = re.search(r'answer[:\s]+\s*(yes|no|maybe)', text_lower)
+    if match:
+        return match.group(1)
+    
     for label in ['yes', 'no', 'maybe']:
         if text_lower.startswith(label):
             return label
-
-    # Fallback: search anywhere in text
+    
+    first_chunk = text_lower[:50]
+    for label in ['yes', 'no', 'maybe']:
+        if label in first_chunk:
+            return label
+    
     for label in ['yes', 'no', 'maybe']:
         if label in text_lower:
             return label
-
+    
     return 'unknown'
 
 
