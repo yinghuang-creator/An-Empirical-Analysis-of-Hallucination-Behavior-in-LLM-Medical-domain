@@ -5,6 +5,7 @@ from dataset_loader import load_medqa_dataset, sample_dataset
 
 from baseline_eval import load_model, evaluate_combined_batch
 
+
 def main():
     # Configurations
     MODEL_NAME = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-3B-Instruct")
@@ -44,6 +45,8 @@ def main():
     print(f"Baseline Accuracy: {results['baseline_correct'] / results['total']:.2%}")
     print(f"CoT Correct      : {results['cot_correct']}")
     print(f"CoT Accuracy     : {results['cot_correct'] / results['total']:.2%}")
+
+
 
 if __name__ == "__main__":
     if torch.cuda.is_available():

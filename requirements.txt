@@ -1,6 +1,9 @@
 datasets
-torch==2.5.1+cu121
-transformers==4.39.3
+transformers
+tokenizers
 numpy<2
 accelerate==0.32.0
---extra-index-url https://download.pytorch.org/whl/cu121
+rank_bm25
+tqdm
+torch==2.5.1+cu124
+--extra-index-url https://download.pytorch.org/whl/cu124
