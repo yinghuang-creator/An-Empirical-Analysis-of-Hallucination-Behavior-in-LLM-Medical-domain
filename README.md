@@ -11,7 +11,11 @@ source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 pip install -r requirements.txt
 ```
 
-## Loading the Dataset
-```python
- python load_dataset.py
+## Running experiments
+```python src/run_experiments.pu --runs {select run config codes from the table in the run_experiments} --n {no. of samples}
+```
+
+### Example:
+```
+python src/run_experiments.py --runs 1 2 3 --n 200
 ```
