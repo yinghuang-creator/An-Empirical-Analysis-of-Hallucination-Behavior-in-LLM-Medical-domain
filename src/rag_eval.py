@@ -50,10 +50,10 @@ def build_rag_prompt(question, retrieved_docs):
     context = "\n\n".join([f"[Abstract {i+1}]: {doc}" for i, doc in enumerate(retrieved_docs)])
 
     prompt = (
-        "You are a medical expert. Based on the following context, answer the question.\n\n"
+        "You are a medical expert. Read the context carefully and answer ONLY based on it.\n\n"
         f"Context:\n{context}\n\n"
         f"Question: {question}\n\n"
-        "Answer (yes, no, or maybe based only on the provided context):"
+        "Answer with exactly one word - yes, no, or maybe:"
     )
     return prompt
 
