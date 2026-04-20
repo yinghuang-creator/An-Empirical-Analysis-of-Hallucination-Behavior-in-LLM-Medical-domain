@@ -52,8 +52,12 @@ def run_one(
     sample_map,
     retriever=None,
     run_minicheck: bool = False,
+    rag_top_k: int = 1,   
 ):
-    tag = f"run{run_id:02d}_{model_key}_{condition}"
+    if condition == "rag":
+        tag = f"run{run_id:02d}_{model_key}_{condition}_top{rag_top_k}"
+    else:
+        tag = f"run{run_id:02d}_{model_key}_{condition}"
     inf_path  = OUT / f"{tag}_inference.json"
     eval_path = OUT / f"eval_{tag}.json"
 
@@ -62,18 +66,18 @@ def run_one(
         return
 
     print(f"\n{'='*60}")
-    print(f"[run {run_id}] model={model_key}  condition={condition}")
+    print(f"[run {run_id}] model={model_key}  condition={condition}  rag_top_k={rag_top_k if retriever and 'rag' in condition else 'N/A'}")
     print(f"{'='*60}")
 
     # ── inference ─────────────────────────────────────────────────────────
+    contexts      = None
+    top_k_used    = None
     if retriever and "rag" in condition:
-        print("  Retrieving contexts (BM25)...")
-        contexts, top_k_used = retriever.retrieve_batch(samples, k=1)  # set k here
-    else:
-        contexts, top_k_used = None, None
+        print(f"  Retrieving contexts (BM25, k={rag_top_k})...")
+        contexts, top_k_used = retriever.retrieve_batch(samples, k=rag_top_k)
 
     runner  = ModelRunner(MODELS[model_key])
-    results = runner.run(samples, condition=condition, contexts=contexts)
+    results = runner.run(samples, condition=condition, contexts=contexts, rag_top_k=top_k_used)
     runner.save(results, str(inf_path))
 
     # ── evaluation ────────────────────────────────────────────────────────
@@ -84,24 +88,20 @@ def run_one(
 
 
 # ── Experiment matrix ─────────────────────────────────────────────────────────
-def build_matrix(medqa, pubmedqa, medqa_map, pubmedqa_map, retriever):
-    # (run_id, model_key, condition, samples, sample_map, retriever, minicheck)
+def build_matrix(medqa, pubmedqa, medqa_map, pubmedqa_map, retriever, rag_top_k):
+    # (run_id, model_key, condition, samples, sample_map, retriever, minicheck, rag_top_k)
     return [
-        # ( 1, "mistralinstruct",     "zero_shot", medqa,    medqa_map,    None,      False),
-        # ( 2, "mistralinstruct",     "cot",       medqa,    medqa_map,    None,      False),
-        # ( 3, "mistralinstruct",     "rag",       pubmedqa, pubmedqa_map, retriever, True ),
-        ( 1, "llama3",     "zero_shot", medqa,    medqa_map,    None,      False),
-        ( 2, "llama3",     "cot",       medqa,    medqa_map,    None,      False),
-        ( 3, "llama3",     "rag",       pubmedqa, pubmedqa_map, retriever, True ),
-        ( 4, "biomistral", "zero_shot", medqa,    medqa_map,    None,      False),
-        ( 5, "biomistral", "cot",       medqa,    medqa_map,    None,      False),
-        ( 6, "biomistral", "rag",       pubmedqa, pubmedqa_map, retriever, True ),
-        ( 7, "biogpt",     "zero_shot", medqa,    medqa_map,    None,      False),
-        ( 8, "biogpt",     "rag",       pubmedqa, pubmedqa_map, retriever, True ),
-        ( 9, "biogpt_sft", "sft",       medqa,    medqa_map,    None,      False),
-        (10, "biogpt_sft", "sft_rag",   pubmedqa, pubmedqa_map, retriever, True ),
+        ( 1, "mistralinstruct", "zero_shot", medqa,    medqa_map,    None,      False, None),
+        ( 2, "mistralinstruct", "cot",       medqa,    medqa_map,    None,      False, None),
+        ( 3, "mistralinstruct", "rag",       pubmedqa, pubmedqa_map, retriever, False, rag_top_k),
+        ( 4, "biomistral",      "zero_shot", medqa,    medqa_map,    None,      False, None),
+        ( 5, "biomistral",      "cot",       medqa,    medqa_map,    None,      False, None),
+        ( 6, "biomistral",      "rag",       pubmedqa, pubmedqa_map, retriever, False, rag_top_k),
+        ( 7, "biogpt",          "zero_shot", medqa,    medqa_map,    None,      False, None),
+        ( 8, "biogpt",          "rag",       pubmedqa, pubmedqa_map, retriever, False, rag_top_k),
+        ( 9, "biogpt_sft",      "sft",       medqa,    medqa_map,    None,      False, None),
+        (10, "biogpt_sft",      "sft_rag",   pubmedqa, pubmedqa_map, retriever, False, rag_top_k),
     ]
-
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
@@ -113,6 +113,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "--n", type=int, default=200,
         help="Samples per dataset (default 200; use 50 for a quick smoke test)"
+    )
+    parser.add_argument(
+        "--rag_top_k", type=int, default=1,       # new CLI arg
+        help="Number of abstracts to retrieve for RAG conditions (default 1)"
     )
     args = parser.parse_args()
 
