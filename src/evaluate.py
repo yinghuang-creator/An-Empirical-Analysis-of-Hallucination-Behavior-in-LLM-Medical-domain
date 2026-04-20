@@ -25,7 +25,7 @@ def _get_minicheck():
     global _minicheck
     if _minicheck is None:
         from minicheck.minicheck import MiniCheck
-        _minicheck = MiniCheck(model_name="roberta-large", device="cuda")
+        _minicheck = MiniCheck(model_name="roberta-large")
     return _minicheck
 
 
@@ -41,6 +41,7 @@ class EvalRecord:
     is_correct: Optional[bool]         # None if extraction failed
     is_hallucination: bool             # True when incorrect or unfaithful
     parse_failed: bool                 # True when extracted_answer is None
+    rag_top_k: Optional[int] = field(default=None)
     bertscore_f1: Optional[float] = field(default=None)
     minicheck_label: Optional[str] = field(default=None)   # 'faithful'|'unfaithful'
     minicheck_prob: Optional[float] = field(default=None)
@@ -126,6 +127,7 @@ class Evaluator:
                 extracted_answer=r.extracted_answer,
                 is_correct=is_correct,
                 is_hallucination=is_hallucination,
+                rag_top_k=r.rag_top_k, 
                 parse_failed=parse_failed,
                 bertscore_f1=bertscore_map.get(r.sample_id),
                 minicheck_label=mc_label,
@@ -158,6 +160,7 @@ def aggregate(records: list[EvalRecord]) -> dict:
         "model":             records[0].model_name,
         "condition":         records[0].condition,
         "source":            records[0].source,
+        "rag_top_k":          records[0].rag_top_k,
         "n":                  total,
         "parse_fail_rate":   round(1 - len(parseable) / total, 4),
         "accuracy":          round(

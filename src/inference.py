@@ -24,6 +24,7 @@ class InferenceResult:
     raw_output: str
     extracted_answer: Optional[str]  # letter for MedQA; yes/no/maybe for PubMedQA
     is_hallucination: Optional[bool] = field(default=None)
+    rag_top_k: Optional[int] = field(default=None)
     prompt_used: str = field(default="", repr=False)
 
 
@@ -66,18 +67,22 @@ def build_prompt_pubmedqa(
     condition: Condition,
     context: Optional[str] = None,
 ) -> str:
+    instruction = (
+        "Answer with a single word only: 'yes', 'no', or 'maybe'. "
+        "Do not explain."
+    )
     if context:
         return (
             f"Context:\n{context}\n\n"
             f"Question: {sample.question}\n\n"
-            "Answer with only 'yes', 'no', or 'maybe'.\n\n"
-            "The correct answer is"
+            f"{instruction}\n\n"
+            "Answer: "
         )
     else:
         return (
             f"Question: {sample.question}\n\n"
-            "Answer with only 'yes', 'no', or 'maybe'.\n\n"
-            "The correct answer is"
+            f"{instruction}\n\n"
+            "Answer: "
         )
 
 
@@ -138,6 +143,7 @@ class ModelRunner:
         condition: Condition,
         contexts: Optional[list[Optional[str]]] = None,
         batch_size: int = 8,
+        rag_top_k: Optional[int] = None,
     ) -> list[InferenceResult]:
         results = []
         contexts = contexts or [None] * len(samples)
@@ -162,7 +168,7 @@ class ModelRunner:
                 return_tensors="pt",
                 padding=True,
                 truncation=True,
-                max_length=512,
+                max_length=1024,
             ).to(self.model.device)
 
             with torch.no_grad():
@@ -184,6 +190,7 @@ class ModelRunner:
                     sample_id=s.id,
                     model_name=self.model_name,
                     condition=condition,
+                    rag_top_k=rag_top_k,
                     raw_output=generated,
                     extracted_answer=extract_answer(generated, s.source),
                     prompt_used=prompt,

@@ -13,7 +13,7 @@ from typing import Optional
 from rank_bm25 import BM25Okapi
 from load_dataset import QASample, load_pubmedqa
 
-TOP_K = 3   # number of abstracts to retrieve per query
+TOP_K = 2   # number of abstracts to retrieve per query
 
 
 def _tokenize(text: str) -> list[str]:
@@ -73,7 +73,8 @@ class BM25Retriever:
         Returns a list aligned 1-to-1 with samples —
         pass directly as `contexts` arg in ModelRunner.run().
         """
-        return [self.retrieve(s.question, k=k) for s in samples]
+        contexts = [self.retrieve(s.question, k=k) for s in samples]
+        return contexts, k
 
 
 # ── Smoke test ───────────────────────────────────────────────────────────────

@@ -39,7 +39,7 @@ def load_all_records(eval_dir: str = "outputs") -> pd.DataFrame:
 # ── Summary table ────────────────────────────────────────────────────────────
 def build_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Aggregate metrics grouped by (model, condition, source)."""
-    groups = df.groupby(["model_name", "condition", "source"])
+    groups = df.groupby(["model_name", "condition", "source", "rag_top_k"])
     rows = []
     for (model, cond, src), grp in groups:
         records = [EvalRecord(**r) for r in grp.to_dict("records")]

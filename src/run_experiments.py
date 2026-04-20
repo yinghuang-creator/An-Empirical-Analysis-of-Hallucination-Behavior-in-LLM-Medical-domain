@@ -66,10 +66,11 @@ def run_one(
     print(f"{'='*60}")
 
     # ── inference ─────────────────────────────────────────────────────────
-    contexts = None
     if retriever and "rag" in condition:
         print("  Retrieving contexts (BM25)...")
-        contexts = retriever.retrieve_batch(samples)
+        contexts, top_k_used = retriever.retrieve_batch(samples, k=1)  # set k here
+    else:
+        contexts, top_k_used = None, None
 
     runner  = ModelRunner(MODELS[model_key])
     results = runner.run(samples, condition=condition, contexts=contexts)
