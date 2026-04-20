@@ -91,9 +91,9 @@ def run_one(
 def build_matrix(medqa, pubmedqa, medqa_map, pubmedqa_map, retriever, rag_top_k):
     # (run_id, model_key, condition, samples, sample_map, retriever, minicheck, rag_top_k)
     return [
-        ( 1, "mistralinstruct", "zero_shot", medqa,    medqa_map,    None,      False, None),
-        ( 2, "mistralinstruct", "cot",       medqa,    medqa_map,    None,      False, None),
-        ( 3, "mistralinstruct", "rag",       pubmedqa, pubmedqa_map, retriever, False, rag_top_k),
+        ( 1, "llama3",          "zero_shot", medqa,    medqa_map,    None,      False, None),
+        ( 2, "llama3",          "cot",       medqa,    medqa_map,    None,      False, None),
+        ( 3, "llama3",          "rag",       pubmedqa, pubmedqa_map, retriever, False, rag_top_k),
         ( 4, "biomistral",      "zero_shot", medqa,    medqa_map,    None,      False, None),
         ( 5, "biomistral",      "cot",       medqa,    medqa_map,    None,      False, None),
         ( 6, "biomistral",      "rag",       pubmedqa, pubmedqa_map, retriever, False, rag_top_k),
@@ -128,7 +128,7 @@ if __name__ == "__main__":
     print(f"Loading datasets (n={args.n} per dataset)...")
     medqa, pubmedqa, medqa_map, pubmedqa_map, retriever = load_data(args.n)
 
-    matrix = build_matrix(medqa, pubmedqa, medqa_map, pubmedqa_map, retriever)
+    matrix = build_matrix(medqa, pubmedqa, medqa_map, pubmedqa_map, retriever, args.rag_top_k)
 
     for row in matrix:
         run_id = row[0]
