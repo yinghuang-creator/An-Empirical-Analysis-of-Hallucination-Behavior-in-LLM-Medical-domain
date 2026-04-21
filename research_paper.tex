@@ -1,0 +1,72 @@
+\documentclass[11pt]{article}
+
+% Change "review" to "final" to generate the final (sometimes called camera-ready) version.
+% Change to "preprint" to generate a non-anonymous version with page numbers.
+\usepackage[preprint]{acl}
+
+% Standard package includes
+\usepackage{times}
+\usepackage{latexsym}
+
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+\usepackage[T1]{fontenc}
+% For Vietnamese characters
+% \usepackage[T5]{fontenc}
+% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
+
+% This assumes your files are encoded as UTF8
+\usepackage[utf8]{inputenc}
+
+% This is not strictly necessary, and may be commented out,
+% but it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+
+% This is also not strictly necessary, and may be commented out.
+% However, it will improve the aesthetics of text in
+% the typewriter font.
+% \usepackage{inconsolata}
+
+%Including images in your LaTeX document requires adding
+%additional package(s)
+\usepackage{graphicx}
+
+% If the title and author information does not fit in the area allocated, uncomment the following
+%
+%\setlength\titlebox{<dim>}
+%
+% and set <dim> to something 5cm or larger.
+
+\title{An Empirical Analysis of Hallucination Behavior in LLMs in the Medical Domain}
+
+\author{Aidan Perez \\
+  Master's in AI at Boston University\\
+  \texttt{aperez00@bu.edu} \\\And
+  Dang Dinh \\
+  Master's in Computer Science at Boston University\\
+  \texttt{dddinh@bu.edu} \\\And
+  Kaveri Goel \\
+  Master's in AI at Boston University\\
+  \texttt{kvrgl@bu.edu} \\\And
+  Ying Huang \\
+  Master's in Computer Science at Boston University\\
+  \texttt{yinghy@bu.edu} }
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Large Language Models (LLMs) have demonstrated remarkable capabilities in generating fluent, contextually relevant text. However, they frequently produce hallucinations — outputs that appear plausible but are factually incorrect, unsupported, or fabricated. This problem is especially critical in high-stakes domains such as medicine, where incorrect information can have serious real-world consequences. While hallucination has been studied in general NLP settings, relatively little empirical work systematically characterizes hallucination behavior specifically within the medical domain — where ground truth is verifiable, the cost of error is high, and LLMs are increasingly being adopted (e.g., in clinical decision support and patient-facing chatbots). In this paper, we present a comprehensive empirical analysis of hallucination behavior in LLMs within the medical domain. We evaluate multiple state-of-the-art LLMs on a diverse set of medical tasks, including question answering, summarization, and clinical note generation. We systematically categorize the types of hallucinations observed, analyze their frequency and severity, and identify common patterns and triggers. Our findings provide critical insights into the nature of hallucination in medical LLMs, highlight the risks associated with their deployment in clinical settings, and suggest directions for future research aimed at mitigating hallucination and improving the reliability of LLMs in healthcare applications.
+\end{abstract}
+\section{Introduction}
+Large Language Models (LLMs) have revolutionized natural language processing (NLP) by demonstrating unprecedented capabilities in generating coherent, contextually relevant text across a wide range of tasks. However, a significant challenge that has emerged with the deployment of LLMs is their propensity to produce hallucinations — outputs that may be fluent and plausible but are factually incorrect, unsupported by evidence, or entirely fabricated. This issue is particularly concerning in high-stakes domains such as medicine, where the dissemination of incorrect information can lead to serious consequences for patient care and safety. Despite the growing body of research on hallucination in general NLP contexts, there remains a paucity of systematic empirical analyses that specifically characterize hallucination behavior in medical LLMs. Given the increasing adoption of
+LLMs in healthcare applications, such as clinical decision support systems and patient-facing chatbots, it is imperative to understand the nature and implications of hallucination in this domain. In this paper, we present a comprehensive empirical analysis of hallucination behavior in LLMs within the medical domain. We evaluate multiple state-of-the-art LLMs across a diverse set of medical tasks, including question answering, summarization, and clinical note generation. Our analysis categorizes the types of hallucinations observed, quantifies their frequency and severity, and identifies common patterns and triggers. The insights gained from our study provide critical guidance for the responsible deployment of LLMs in healthcare settings and inform future research aimed at mitigating hallucination and enhancing the reliability of medical LLMs. Solving this problem is crucial 
+for ensuring that LLMs can be safely and effectively integrated into clinical workflows, ultimately improving patient outcomes and advancing the field of medical AI.  This is a hard problem to solve, and we hope that our work will inspire further research in this area.  The reason that this problem is so hard to solve is that it requires a deep understanding of the underlying language model, as well as the ability to identify and mitigate hallucinations in a way that does not compromise the model's ability to generate useful and relevant text.  Additionally, the medical domain is particularly challenging due to the complexity and nuance of medical language, as well as the high stakes involved in providing accurate information.  We hope that our work will provide a foundation for future research in this area, and that it will ultimately lead to the development of more reliable and trustworthy LLMs for use in healthcare applications.
+\section{Progress} 
+\subsection{Methods}
+% TODO: Cite MedQA and PubMedQA datasets
+% We might want to list this step by step to make it clearer
+To conduct our empirical analysis of hallucination behavior in medical LLMs, we have selected two widely used datasets: MedQA and PubMedQA. The MedQA dataset consists of multiple-choice questions derived from the United States Medical Licensing Examination (USMLE), covering a broad range of medical topics and requiring complex reasoning and domain-specific knowledge. The PubMedQA dataset, on the other hand, consists of yes/no questions based on abstracts from the PubMed database, which require the model to extract relevant information from the provided abstracts to generate accurate responses. We have chosen these datasets because they represent different types of medical tasks and require varying levels of reasoning and knowledge, allowing us to comprehensively evaluate the hallucination behavior of LLMs across a spectrum of medical applications. We have implemented a systematic evaluation framework that includes regular prompting, chain-of-thought prompting, and Retrieval-Augmented Generation (RAG)
+to assess the performance of the LLMs on these datasets. Regular prompting involves providing the model with a straightforward prompt to generate a response, while chain-of-thought prompting encourages the model to generate intermediate reasoning steps before arriving at a final answer. RAG combines retrieval-based methods with generative models, allowing the model to access external knowledge sources to generate more accurate and relevant responses. By comparing the outputs generated by the LLMs under these different prompting strategies, we aim to identify patterns of hallucination and evaluate the effectiveness of various techniques for mitigating this issue in medical LLMs.
+So far, we have evaluated the model on the MedQA dataset using regular prompting and chain-of-thought prompting. We have found that the model performs better on the MedQA dataset when using chain-of-thought prompting, which is consistent with previous research on the benefits of chain-of-thought prompting for improving the performance of LLMs on complex tasks. We have also found that the model is able to generate more accurate and relevant responses when using chain-of-thought prompting, which suggests that this approach may be effective for mitigating hallucination in medical LLMs. We are currently in the process of analyzing the results of our experiments and categorizing the types of hallucinations observed in the model's outputs. We plan to quantify the frequency and severity of hallucinations, as well as identify common patterns and triggers. This analysis will provide critical insights into the nature of hallucination in medical LLMs and inform future research aimed at mitigating this issue.
+We also have evaluated the model on the PubMedQA dataset, and have used Retrieval-Augmented Generation (RAG) to improve the model's performance on this dataset. RAG is a technique that combines retrieval-based methods with generative models, allowing the model to access external knowledge sources to generate more accurate and relevant responses. We have found that using RAG has significantly improved the model's performance on the PubMedQA dataset, and has also reduced the frequency of hallucinations in the model's outputs. We are currently analyzing the results of our experiments with RAG and comparing them to our previous results with regular prompting and chain-of-thought prompting. This analysis will help us understand the effectiveness of RAG for mitigating hallucination in medical LLMs and inform future research in this area.
+\end{document}
