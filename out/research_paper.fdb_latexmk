@@ -1,11 +1,11 @@
 # Fdb version 4
-["xdvipdfmx"] 1776813893.09579 "out/research_paper.xdv" "out/research_paper.pdf" "out/research_paper" 1776813893.29596 0
-  "out/research_paper.xdv" 1776813893.07522 12676 e1b2782f16f66656e4179b514ec6f924 "xelatex"
+["xdvipdfmx"] 1776814421.79677 "out/research_paper.xdv" "out/research_paper.pdf" "out/research_paper" 1776814421.9945 0
+  "out/research_paper.xdv" 1776814421.77629 13728 8b9bffc07197f8970824a6a08902ef05 "xelatex"
   (generated)
   "out/research_paper.pdf"
   (rewritten before read)
-["xelatex"] 1776813892.75724 "/Users/yinghuang/Desktop/BU/NLP/Final project/research_paper.tex" "out/research_paper.xdv" "research_paper" 1776813893.29539 0
-  "/Users/yinghuang/Desktop/BU/NLP/Final project/research_paper.tex" 1776813892.68953 9297 e19aacdf90d44743776f2c438dc6dff5 ""
+["xelatex"] 1776814421.47308 "/Users/yinghuang/Desktop/BU/NLP/Final project/research_paper.tex" "out/research_paper.xdv" "research_paper" 1776814421.99393 0
+  "/Users/yinghuang/Desktop/BU/NLP/Final project/research_paper.tex" 1776814421.5766 9972 502f8a369b8082a0b5ac9be7dbe07a65 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr8t.tfm" 1136768653 1384 4632f5e54900a7dadbb83f555bc61e56 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/times/ptmb8t.tfm" 1136768653 6880 f19b8995b61c334d78fc734065f6b4d4 ""
@@ -85,9 +85,9 @@
   "/usr/local/texlive/2025/texmf-var/web2c/xetex/xelatex.fmt" 1741450550 5639796 b6822fbf027c6598cec2e241e0925725 ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
   "acl.sty" 1774643427.31232 11615 e2c027f483aa40e577ed34264c8b0655 ""
-  "out/research_paper.aux" 1776813893.07482 478 971397c89662125453a22edefe40500d "xelatex"
-  "out/research_paper.out" 1776813893.07509 278 3aedd3fb4292a23c99a3be0a03a6031c "xelatex"
-  "research_paper.tex" 1776813892.68953 9297 e19aacdf90d44743776f2c438dc6dff5 ""
+  "out/research_paper.aux" 1776814421.77583 615 75a4399c704fd472e4c0e0f69f4baa7b "xelatex"
+  "out/research_paper.out" 1776814421.77615 494 ca1ca090ba19bdd0f0b2a231f61ffc18 "xelatex"
+  "research_paper.tex" 1776814421.5766 9972 502f8a369b8082a0b5ac9be7dbe07a65 ""
   (generated)
   "out/research_paper.aux"
   "out/research_paper.log"
