@@ -40,16 +40,16 @@
 \title{An Empirical Analysis of Hallucination Behavior in LLMs in the Medical Domain}
 
 \author{Aidan Perez \\
-  Master's in AI at Boston University\\
+  MS in AI, Boston University\\
   \texttt{aperez00@bu.edu} \\\And
   Dang Dinh \\
-  Master's in Computer Science at Boston University\\
-  \texttt{dddinh@bu.edu} \\\And
+  MS in Data Science, Boston University\\
+  \texttt{dddinh@bu.edu} \\\AND
   Kaveri Goel \\
-  Master's in AI at Boston University\\
+  MS in AI, Boston University\\
   \texttt{kvrgl@bu.edu} \\\And
   Ying Huang \\
-  Master's in Computer Science at Boston University\\
+  MS in CS, Boston University\\
   \texttt{yinghy@bu.edu} }
 
 \begin{document}
@@ -78,4 +78,9 @@ Under CoT prompting, the model more frequently produces longer reasoning traces 
 
 Taken together, these findings suggest that explicit reasoning prompts do not automatically improve performance on medical multiple-choice QA. In our current setup, longer CoT generations may create additional opportunities for noisy intermediate reasoning and answer extraction failure. 
 We therefore treat this as a preliminary result tied to the current prompting and evaluation design, rather than as a general claim that CoT is ineffective in medical QA. In future work, we plan to investigate whether stricter output constraints and more robust answer extraction can improve the reliability of CoT prompting.
+\subsection{RAG Preliminary Findings}
+
+We evaluated three models under Retrieval-Augmented Generation (RAG) conditions on the PubMedQA benchmark using BM25 retrieval with top-2 abstracts. On 450 evaluation samples, Meta-Llama-3-8B-Instruct achieved 73.4\% accuracy with a hallucination rate of 28.9\% and an average BERTScore F1 of 0.850. BioMistral-7B achieved 52.9\% accuracy with a hallucination rate of 54.9\% and BERTScore F1 of 0.816. BioGPT achieved 54.4\% accuracy but with a hallucination rate of 89.1\% and a parse failure rate of 80\%, indicating the model struggled to generate structured yes/no/maybe responses.
+
+These preliminary findings suggest that general-purpose models such as Llama3 benefit more from RAG than smaller domain-specific models. BioGPT's high parse failure rate indicates that the current prompting strategy may not be well-suited for smaller generative models, which we plan to address in future experiments. Comparison between RAG and zero-shot conditions on the same PubMedQA questions remains pending and will be included in the final report.
 \end{document}
