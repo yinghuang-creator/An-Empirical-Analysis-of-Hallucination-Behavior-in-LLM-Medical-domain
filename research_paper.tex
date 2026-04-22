@@ -90,4 +90,19 @@ We therefore treat this as a preliminary result tied to the current prompting an
 We evaluated three models under Retrieval-Augmented Generation (RAG) conditions on the PubMedQA benchmark using BM25 retrieval with top-2 abstracts. On 450 evaluation samples, Meta-Llama-3-8B-Instruct achieved 73.4\% accuracy with a hallucination rate of 28.9\% and an average BERTScore F1 of 0.850. BioMistral-7B achieved 52.9\% accuracy with a hallucination rate of 54.9\% and BERTScore F1 of 0.816. BioGPT achieved 54.4\% accuracy but with a hallucination rate of 89.1\% and a parse failure rate of 80\%, indicating the model struggled to generate structured yes/no/maybe responses.
 
 These preliminary findings suggest that general-purpose models such as Llama3 benefit more from RAG than smaller domain-specific models. BioGPT's high parse failure rate indicates that the current prompting strategy may not be well-suited for smaller generative models, which we plan to address in future experiments. Comparison between RAG and zero-shot conditions on the same PubMedQA questions remains pending and will be included in the final report.
+
+\subsection{Future Work}
+
+Our future work will focus on the following directions:
+
+\begin{itemize}
+    \item \textbf{Improve the robustness of CoT prompting.}  
+    Our current results suggest that chain-of-thought (CoT) prompting is more vulnerable to formatting noise, repetition, trailing text, and parse failures. To address this issue, we plan to test stricter output constraints, shorter reasoning prompts, and alternative prompt templates that require the model to end with one clearly formatted final answer. We also plan to improve the answer extraction rules so that small variations in output style do not overly affect the measured hallucination rate.
+
+    \item \textbf{Continue fine-tuning experiments.}  
+    We will continue the fine-tuning component of the project and investigate whether combining fine-tuning with retrieval can improve reliability beyond either approach alone. In particular, we want to study whether domain-specific fine-tuning can reduce hallucination further when paired with RAG.
+
+    \item \textbf{Evaluate additional models.}  
+    We plan to test newer and more strongly instruction-tuned models, as well as additional medically adapted models, to examine whether the current CoT limitations are specific to the models we have already tested. 
+\end{itemize}
 \end{document}
