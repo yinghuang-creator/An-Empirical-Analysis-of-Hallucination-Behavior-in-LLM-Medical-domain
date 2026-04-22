@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  21 APR 2026 19:24
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  21 APR 2026 19:35
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -373,9 +373,57 @@ Missing character: There is no — ("2014) in font ptmr8t!
 
 
 ]
-Underfull \hbox (badness 2027) in paragraph at lines 69--76
-\T1/ptm/m/n/10.95 So far, we have eval-u-ated Meta-Llama-3-8B-
+Underfull \hbox (badness 2409) in paragraph at lines 69--71
+\T1/ptm/m/n/10.95 Li-cens-ing Ex-am-i-na-tion (USMLE), cov-er-ing a
  []
+
+
+Underfull \hbox (badness 2165) in paragraph at lines 69--71
+\T1/ptm/m/n/10.95 broad range of med-i-cal top-ics and re-quir-ing
+ []
+
+
+Underfull \hbox (badness 2293) in paragraph at lines 69--71
+\T1/ptm/m/n/10.95 We have cho-sen these datasets be-cause they
+ []
+
+
+Underfull \hbox (badness 2818) in paragraph at lines 69--71
+\T1/ptm/m/n/10.95 the model with a straight-for-ward prompt to
+ []
+
+
+Underfull \hbox (badness 5908) in paragraph at lines 69--71
+\T1/ptm/m/n/10.95 gen-er-ate a re-sponse, while chain-of-thought
+ []
+
+
+Underfull \hbox (badness 2538) in paragraph at lines 69--71
+\T1/ptm/m/n/10.95 prompt-ing en-cour-ages the model to gen-er-ate
+ []
+
+
+Underfull \hbox (badness 2020) in paragraph at lines 69--71
+\T1/ptm/m/n/10.95 aim to iden-tify pat-terns of hal-lu-ci-na-tion and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 69--71
+
+ []
+
+
+Underfull \hbox (badness 2012) in paragraph at lines 73--75
+\T1/ptm/m/n/10.95 Llama-3-8B-Instruct un-der two in-fer-ence con-
+ []
+
+
+Underfull \hbox (badness 1817) in paragraph at lines 73--75
+\T1/ptm/m/n/10.95 di-tions on the MedQA bench-mark: stan-dard
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
@@ -387,7 +435,7 @@ LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `research_paper.out' has not changed.
-(rerunfilecheck)             Checksum: 3AEDD3FB4292A23C99A3BE0A03A6031C;278.
+(rerunfilecheck)             Checksum: A4B85CCB2C63ABD29EE0B5BEB319C2D2;438.
  ) 
 Here is how much of TeX's memory you used:
  12865 strings out of 473832
@@ -398,4 +446,4 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  87i,10n,93p,1103b,336s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on out/research_paper.xdv (2 pages, 12676 bytes).
+Output written on out/research_paper.xdv (2 pages, 13660 bytes).
