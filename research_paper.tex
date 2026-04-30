@@ -91,6 +91,67 @@ We evaluated three models under Retrieval-Augmented Generation (RAG) conditions 
 
 These preliminary findings suggest that general-purpose models such as Llama3 benefit more from RAG than smaller domain-specific models. BioGPT's high parse failure rate indicates that the current prompting strategy may not be well-suited for smaller generative models, which we plan to address in future experiments. Comparison between RAG and zero-shot conditions on the same PubMedQA questions remains pending and will be included in the final report.
 
+\section{Results}
+
+\subsection{MedQA: Zero-Shot vs.\ Chain-of-Thought}
+
+Table~\ref{tab:medqa-llama} summarises the performance of Meta-Llama-3-8B-Instruct on the MedQA benchmark under zero-shot and chain-of-thought (CoT) prompting (500 samples).
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{lcc}
+    \hline
+    \textbf{Metric} & \textbf{Zero-Shot} & \textbf{CoT} \\
+    \hline
+    Correct           & 302       & 282      \\
+    Accuracy          & 60.4\%    & 56.4\%   \\
+    Hallucination Rate& 39.6\%    & 43.6\%   \\
+    Parse Failures    & 4         & 18       \\
+    Avg.\ BERTScore F1& 0.819    & 0.814    \\
+    \hline
+  \end{tabular}
+  \caption{MedQA results for Llama-3-8B-Instruct (500 samples).}
+  \label{tab:medqa-llama}
+\end{table}
+
+Zero-shot prompting outperforms CoT on every metric. CoT produces longer reasoning traces that introduce more formatting artifacts, repetition, and parse failures, leading to a higher measured hallucination rate. These results suggest that explicit reasoning prompts do not automatically improve performance on medical multiple-choice QA.
+
+\subsection{PubMedQA: Retrieval-Augmented Generation}
+
+We evaluated four models under RAG conditions on PubMedQA using BM25 retrieval with top-2 abstracts. Table~\ref{tab:pubmedqa-rag} reports the results.
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{lccc}
+    \hline
+    \textbf{Model} & \textbf{Acc.} & \textbf{Halluc.} & \textbf{BERT F1} \\
+    \hline
+    Llama-3-8B      & 73.4\% & 28.9\% & 0.850 \\
+    BioMistral-7B   & 52.9\% & 54.9\% & 0.816 \\
+    BioGPT          & 54.4\% & 89.1\% & ---   \\
+    Qwen2.5-3B      & 19.0\% & 81.0\% & ---   \\
+    \hline
+  \end{tabular}
+  \caption{PubMedQA RAG results. Llama-3 and BioMistral evaluated on 450 samples; Qwen2.5-3B-Instruct on 200 samples.}
+  \label{tab:pubmedqa-rag}
+\end{table}
+
+Llama-3-8B-Instruct achieves the highest accuracy and lowest hallucination rate, suggesting that larger, general-purpose instruction-tuned models benefit most from retrieval augmentation. BioGPT and Qwen2.5-3B-Instruct exhibit very high hallucination rates; inspection reveals that both models overwhelmingly predict ``maybe'' (Qwen2.5-3B predicted ``maybe'' for 175 out of 200 questions), failing to commit to definitive yes/no answers even when the retrieved evidence supports one.
+
+\subsection{Prediction Distribution Analysis}
+
+Qwen2.5-3B-Instruct shows a strong bias toward hedging. On PubMedQA, 87.5\% of its predictions were ``maybe,'' compared to a gold-label ``maybe'' rate of only 11.0\%. On MedQA (zero-shot), the model exhibited a preference for option~D (45.8\% of predictions), while CoT prompting shifted the distribution heavily toward option~A (62.5\%). This sensitivity of the answer distribution to the prompting strategy—without a corresponding change in accuracy—suggests that the model's predictions are driven more by surface-level prompt cues than by genuine medical reasoning.
+
+\subsection{Summary of Findings}
+
+Across all experiments, three key findings emerge:
+
+\begin{enumerate}
+    \item \textbf{Larger instruction-tuned models hallucinate less under RAG.} Llama-3-8B-Instruct achieves 73.4\% accuracy on PubMedQA with RAG, substantially outperforming both domain-specific and smaller models.
+    \item \textbf{CoT prompting does not reliably reduce hallucination.} On MedQA, CoT yields lower accuracy and higher hallucination rates than zero-shot prompting, largely due to increased output noise and parse failures.
+    \item \textbf{Smaller models exhibit systematic prediction biases.} Qwen2.5-3B-Instruct and BioGPT show degenerate prediction distributions (e.g., overwhelming ``maybe'' bias), indicating that these models lack the capacity to leverage retrieved evidence effectively for medical QA.
+\end{enumerate}
+
 \subsection{Future Work}
 
 Our future work will focus on the following directions:
@@ -103,6 +164,9 @@ Our future work will focus on the following directions:
     We will continue the fine-tuning component of the project and investigate whether combining fine-tuning with retrieval can improve reliability beyond either approach alone. In particular, we want to study whether domain-specific fine-tuning can reduce hallucination further when paired with RAG.
 
     \item \textbf{Evaluate additional models.}  
-    We plan to test newer and more strongly instruction-tuned models, as well as additional medically adapted models, to examine whether the current CoT limitations are specific to the models we have already tested. 
+    We plan to test newer and more strongly instruction-tuned models, as well as additional medically adapted models, to examine whether the current CoT limitations are specific to the models we have already tested.
+
+    \item \textbf{Fix ground-truth extraction for MedQA on Qwen2.5-3B.}
+    Our current MedQA evaluation pipeline for Qwen2.5-3B-Instruct produced incorrect ground-truth labels due to an answer-matching issue in the dataset loader. We plan to resolve this and re-run the evaluation to obtain valid accuracy figures for this model on MedQA.
 \end{itemize}
 \end{document}
