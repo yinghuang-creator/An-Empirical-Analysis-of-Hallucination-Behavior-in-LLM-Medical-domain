@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2023.8.15)  30 APR 2026 16:01
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2023.8.15)  30 APR 2026 16:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -783,39 +783,47 @@ Underfull \hbox (badness 1087) in paragraph at lines 90--91
 
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <10.95> on input line 102.
+
+Underfull \hbox (badness 3780) in paragraph at lines 137--138
+[]\T1/ptm/m/n/10.95 (+20) Qwen2.5-3B-Instruct per-forms sub-stan-tially
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
 [3]
-Underfull \hbox (badness 1210) in paragraph at lines 150--151
+Underfull \hbox (badness 1210) in paragraph at lines 170--171
 \T1/ptm/m/n/10.95 (+20) achieves 73.4% ac-cu-racy on Pub-MedQA
  []
 
 
-Underfull \hbox (badness 2245) in paragraph at lines 152--153
+Underfull \hbox (badness 2245) in paragraph at lines 172--173
 []\T1/ptm/b/n/10.95 Smaller mod-els ex-hibit sys-tem-atic pre-
  []
 
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 160.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 180.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 160.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 172.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 180.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 189.
  [4]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 172.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 189.
 
 (./research_paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 172.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 172.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 189.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 189.
 Package rerunfilecheck Info: File `research_paper.out' has not changed.
 (rerunfilecheck)             Checksum: 341C10462A50E25F3493627DABC0216B;764.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 172.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 189.
  ) 
 Here is how much of TeX's memory you used:
- 9622 strings out of 494917
- 145998 string characters out of 6180699
- 270787 words of memory out of 5000000
- 12684 multiletter control sequences out of 15000+600000
+ 9624 strings out of 494917
+ 146029 string characters out of 6180699
+ 270869 words of memory out of 5000000
+ 12685 multiletter control sequences out of 15000+600000
  32657 words of font info for 128 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  43i,10n,40p,1036b,328s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -824,10 +832,10 @@ e/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/
 type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times
 /utmr8a.pfb>
-Output written on research_paper.pdf (4 pages, 68324 bytes).
+Output written on research_paper.pdf (4 pages, 68598 bytes).
 PDF statistics:
- 102 PDF objects out of 1000 (max. 8388607)
- 91 compressed objects within 1 object stream
- 22 named destinations out of 1000 (max. 500000)
+ 104 PDF objects out of 1000 (max. 8388607)
+ 93 compressed objects within 1 object stream
+ 23 named destinations out of 1000 (max. 500000)
  13409 words of extra memory for PDF output out of 14400 (max. 10000000)
 

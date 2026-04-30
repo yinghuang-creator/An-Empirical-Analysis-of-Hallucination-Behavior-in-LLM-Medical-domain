@@ -8,7 +8,7 @@ import os
 def build_medqa_baseline_prompt(example):
     question = example['question']
     options = example['options']
-    option_lines = [f"{chr(65+i)}. {opt}" for i, opt in enumerate(options)]
+    option_lines = [f"{opt['key']}. {opt['value']}" for opt in options]
     
     prompt = (
         "You are a medical expert. Please answer the following multiple-choice question:\n\n"
@@ -21,7 +21,7 @@ def build_medqa_baseline_prompt(example):
 def build_medqa_cot_prompt(example):
     question = example['question']
     options = example['options']
-    option_lines = [f"{chr(65+i)}. {opt}" for i, opt in enumerate(options)]
+    option_lines = [f"{opt['key']}. {opt['value']}" for opt in options]
     
     prompt = (
         "You are a medical expert. Please answer the following multiple-choice question.\n"
@@ -113,12 +113,9 @@ def evaluate_combined_batch(dataset, tokenizer, model, batch_size=8, output_csv=
             for j in range(len(batch_examples)):
                 ex = batch_examples[j]
                 
-                correct_ans_text = str(ex['answer']).strip()
-                correct_letter = "UNKNOWN"
-                for opt_idx, opt_text in enumerate(ex['options']):
-                    if str(opt_text).strip() == correct_ans_text:
-                        correct_letter = chr(65 + opt_idx) # A, B, C, D...
-                        break
+                correct_letter = str(ex.get('answer_idx', '')).strip().upper()
+                if correct_letter not in ('A', 'B', 'C', 'D'):
+                    correct_letter = "UNKNOWN"
                 
                 # get baseline prediction
                 base_pred = extract_answer_letter(baseline_outputs[j], mode="baseline")

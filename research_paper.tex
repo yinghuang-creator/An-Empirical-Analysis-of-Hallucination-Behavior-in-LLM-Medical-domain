@@ -116,6 +116,26 @@ Table~\ref{tab:medqa-llama} summarises the performance of Meta-Llama-3-8B-Instru
 
 Zero-shot prompting outperforms CoT on every metric. CoT produces longer reasoning traces that introduce more formatting artifacts, repetition, and parse failures, leading to a higher measured hallucination rate. These results suggest that explicit reasoning prompts do not automatically improve performance on medical multiple-choice QA.
 
+We observe a consistent pattern with Qwen2.5-3B-Instruct on MedQA (200 samples), as shown in Table~\ref{tab:medqa-qwen}.
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{lcc}
+    \hline
+    \textbf{Metric} & \textbf{Zero-Shot} & \textbf{CoT} \\
+    \hline
+    Correct           & 86        & 47       \\
+    Accuracy          & 43.0\%    & 23.5\%   \\
+    Hallucination Rate& 57.0\%    & 76.5\%   \\
+    Parse Failures    & 1         & 12       \\
+    \hline
+  \end{tabular}
+  \caption{MedQA results for Qwen2.5-3B-Instruct (200 samples).}
+  \label{tab:medqa-qwen}
+\end{table}
+
+Qwen2.5-3B-Instruct performs substantially worse than Llama-3-8B-Instruct on MedQA under both prompting conditions. CoT prompting again degrades performance relative to zero-shot, with accuracy dropping from 43.0\% to 23.5\% and hallucination rate increasing from 57.0\% to 76.5\%. The gap between zero-shot and CoT is even larger for Qwen2.5-3B than for Llama-3, suggesting that smaller models are more susceptible to the noise introduced by chain-of-thought reasoning.
+
 \subsection{PubMedQA: Retrieval-Augmented Generation}
 
 We evaluated four models under RAG conditions on PubMedQA using BM25 retrieval with top-2 abstracts. Table~\ref{tab:pubmedqa-rag} reports the results.
@@ -140,7 +160,7 @@ Llama-3-8B-Instruct achieves the highest accuracy and lowest hallucination rate,
 
 \subsection{Prediction Distribution Analysis}
 
-Qwen2.5-3B-Instruct shows a strong bias toward hedging. On PubMedQA, 87.5\% of its predictions were ``maybe,'' compared to a gold-label ``maybe'' rate of only 11.0\%. On MedQA (zero-shot), the model exhibited a preference for option~D (45.8\% of predictions), while CoT prompting shifted the distribution heavily toward option~A (62.5\%). This sensitivity of the answer distribution to the prompting strategy—without a corresponding change in accuracy—suggests that the model's predictions are driven more by surface-level prompt cues than by genuine medical reasoning.
+Qwen2.5-3B-Instruct shows a strong bias toward hedging. On PubMedQA, 87.5\% of its predictions were ``maybe,'' compared to a gold-label ``maybe'' rate of only 11.0\%. On MedQA (zero-shot), the model exhibited a preference for option~D (55.0\% of predictions vs.\ 26.0\% in the gold labels), while CoT prompting shifted the distribution heavily toward option~A (60.5\%). This sensitivity of the answer distribution to the prompting strategy—with a large corresponding drop in accuracy (43.0\% to 23.5\%)—suggests that the model's predictions are driven more by surface-level prompt cues than by genuine medical reasoning.
 
 \subsection{Summary of Findings}
 
@@ -165,8 +185,5 @@ Our future work will focus on the following directions:
 
     \item \textbf{Evaluate additional models.}  
     We plan to test newer and more strongly instruction-tuned models, as well as additional medically adapted models, to examine whether the current CoT limitations are specific to the models we have already tested.
-
-    \item \textbf{Fix ground-truth extraction for MedQA on Qwen2.5-3B.}
-    Our current MedQA evaluation pipeline for Qwen2.5-3B-Instruct produced incorrect ground-truth labels due to an answer-matching issue in the dataset loader. We plan to resolve this and re-run the evaluation to obtain valid accuracy figures for this model on MedQA.
 \end{itemize}
 \end{document}
