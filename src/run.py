@@ -43,9 +43,11 @@ def main():
     print(f"Total Questions  : {results['total']}")
     print(f"Baseline Correct : {results['baseline_correct']}")
     print(f"Baseline Accuracy: {results['baseline_correct'] / results['total']:.2%}")
+    print(f"Baseline Parse Fail: {results['baseline_parse_fail']}")
     print(f"CoT Correct      : {results['cot_correct']}")
     print(f"CoT Accuracy     : {results['cot_correct'] / results['total']:.2%}")
-
+    print(f"CoT Parse Fail        : {results['cot_parse_fail']}")
+    print(f"CoT Recovered         : {results['cot_recovered']}")
 
 
 if __name__ == "__main__":

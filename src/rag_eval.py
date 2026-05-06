@@ -168,11 +168,12 @@ def evaluate_rag(dataset, tokenizer, model, bm25, corpus,
     scorer = load_minicheck()
 
     stats = {
-        'total': 0,
-        'correct': 0,
-        'unknown': 0,
-        'faithful': 0,
-        'unfaithful': 0
+    "baseline_correct": 0,
+    "cot_correct": 0,
+    "baseline_parse_fail": 0,
+    "cot_parse_fail": 0,
+    "cot_recovered": 0,
+    "total": 0
     }
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -187,7 +188,8 @@ def evaluate_rag(dataset, tokenizer, model, bm25, corpus,
             'is_correct',
             'faithfulness_score',
             'retrieved_context',
-            'model_output'
+            'model_output',
+            'cot_recovery_output'
         ]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
