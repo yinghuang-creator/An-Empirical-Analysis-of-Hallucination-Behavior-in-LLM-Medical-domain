@@ -9,7 +9,7 @@ from baseline_eval import load_model, evaluate_combined_batch
 def main():
     # Configurations
     MODEL_NAME = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-3B-Instruct")
-    NUM_SAMPLES = 200
+    NUM_SAMPLES = 500
     BATCH_SIZE = 8
     
     # Set the output path
@@ -48,6 +48,8 @@ def main():
     print(f"CoT Accuracy     : {results['cot_correct'] / results['total']:.2%}")
     print(f"CoT Parse Fail        : {results['cot_parse_fail']}")
     print(f"CoT Recovered         : {results['cot_recovered']}")
+    print(f"CoT Truncated Fail    : {results['cot_truncated_fail']}")
+    print(f"CoT Wrong After Parse : {results['cot_wrong_after_parse']}")
 
 
 if __name__ == "__main__":
