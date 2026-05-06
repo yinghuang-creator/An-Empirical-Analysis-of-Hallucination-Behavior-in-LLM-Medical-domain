@@ -1,40 +1,13 @@
 \documentclass[11pt]{article}
-
-% Change "review" to "final" to generate the final (sometimes called camera-ready) version.
-% Change to "preprint" to generate a non-anonymous version with page numbers.
 \usepackage[preprint]{acl}
 \usepackage{natbib}
-% Standard package includes
 \usepackage{times}
 \usepackage{latexsym}
-% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
 \usepackage[T1]{fontenc}
-% For Vietnamese characters
-% \usepackage[T5]{fontenc}
-% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
-
-% This assumes your files are encoded as UTF8
 \usepackage[utf8]{inputenc}
-
-% This is not strictly necessary, and may be commented out,
-% but it will improve the layout of the manuscript,
-% and will typically save some space.
 \usepackage{microtype}
-
-% This is also not strictly necessary, and may be commented out.
-% However, it will improve the aesthetics of text in
-% the typewriter font.
-% \usepackage{inconsolata}
-
-%Including images in your LaTeX document requires adding
-%additional package(s)
 \usepackage{graphicx}
-
-% If the title and author information does not fit in the area allocated, uncomment the following
-%
-%\setlength\titlebox{<dim>}
-%
-% and set <dim> to something 5cm or larger.
+\usepackage{booktabs}
 
 \title{An Empirical Analysis of Hallucination Behavior in LLMs in the Medical Domain}
 
@@ -53,150 +26,424 @@
 
 \begin{document}
 \maketitle
+
+% ── ABSTRACT ─────────────────────────────────────────────────────────────────
 \begin{abstract}
-Large Language Models (LLMs) have demonstrated remarkable capabilities in generating fluent, contextually relevant text. However, they frequently produce hallucinations — outputs that appear plausible but are factually incorrect, unsupported, or fabricated. This problem is especially critical in high-stakes domains such as medicine, where incorrect information can have serious real-world consequences. While hallucination has been studied in general NLP settings, relatively little empirical work systematically characterizes hallucination behavior specifically within the medical domain — where ground truth is verifiable, the cost of error is high, and LLMs are increasingly being adopted (e.g., in clinical decision support and patient-facing chatbots). 
-In this paper, we present a comprehensive empirical analysis of hallucination behavior in LLMs within the medical domain. We evaluate multiple state-of-the-art LLMs on a diverse set of medical tasks, including question answering, summarization, and clinical note generation. We systematically categorize the types of hallucinations observed, analyze their frequency and severity, and identify common patterns and triggers. Our findings provide critical insights into the nature of hallucination in medical LLMs, highlight the risks associated with their deployment in clinical settings, and suggest directions for future research aimed at mitigating hallucination and improving the reliability of LLMs in healthcare applications.
+Large Language Models (LLMs) have demonstrated remarkable capabilities 
+in generating fluent, contextually relevant text. However, they 
+frequently produce hallucinations --- outputs that appear plausible but 
+are factually incorrect, unsupported, or fabricated. This problem is 
+especially critical in high-stakes domains such as medicine, where 
+incorrect information can have serious real-world consequences. We 
+present a controlled empirical study of hallucination behavior across 
+three model families (Llama-3-8B, BioMistral-7B, and BioGPT) on two 
+medical QA benchmarks (MedQA and PubMedQA), evaluating four 
+intervention conditions: zero-shot prompting, chain-of-thought (CoT) 
+prompting, retrieval-augmented generation (RAG), and supervised 
+fine-tuning (SFT). Our results show that larger instruction-tuned 
+models benefit most from RAG, CoT prompting consistently degrades 
+performance relative to zero-shot due to output noise and parse 
+failures, and fine-tuning improves BioGPT accuracy by 6.66 percentage 
+points while eliminating parse failures entirely. Combining fine-tuning 
+with RAG, however, leads to catastrophic output degradation, suggesting 
+that task-specific fine-tuning and retrieval augmentation are 
+incompatible in their current forms for this model.
 \end{abstract}
+
+% ── INTRODUCTION ─────────────────────────────────────────────────────────────
 \section{Introduction}
-Large Language Models (LLMs) have revolutionized natural language processing (NLP) by demonstrating unprecedented capabilities in generating coherent, contextually relevant text across a wide range of tasks. However, a significant challenge that has emerged with the deployment of LLMs is their propensity to produce hallucinations — outputs that may be fluent and plausible but are factually incorrect, unsupported by evidence, or entirely fabricated. This issue is particularly concerning in high-stakes domains such as medicine, where the dissemination of incorrect information can lead to serious consequences for patient care and safety. Despite the growing body of research on hallucination in general NLP contexts, there remains a paucity of systematic empirical analyses that specifically characterize hallucination behavior in medical LLMs. Given the increasing adoption of
-LLMs in healthcare applications, such as clinical decision support systems and patient-facing chatbots, it is imperative to understand the nature and implications of hallucination in this domain. In this paper, we present a comprehensive empirical analysis of hallucination behavior in LLMs within the medical domain. We evaluate multiple state-of-the-art LLMs across a diverse set of medical tasks, including question answering, summarization, and clinical note generation. Our analysis categorizes the types of hallucinations observed, quantifies their frequency and severity, and identifies common patterns and triggers. The insights gained from our study provide critical guidance for the responsible deployment of LLMs in healthcare settings and inform future research aimed at mitigating hallucination and enhancing the reliability of medical LLMs. Solving this problem is crucial 
-for ensuring that LLMs can be safely and effectively integrated into clinical workflows, ultimately improving patient outcomes and advancing the field of medical AI.  This is a hard problem to solve, and we hope that our work will inspire further research in this area.  The reason that this problem is so hard to solve is that it requires a deep understanding of the underlying language model, as well as the ability to identify and mitigate hallucinations in a way that does not compromise the model's ability to generate useful and relevant text.  Additionally, the medical domain is particularly challenging due to the complexity and nuance of medical language, as well as the high stakes involved in providing accurate information.  We hope that our work will provide a foundation for future research in this area, and that it will ultimately lead to the development of more reliable and trustworthy LLMs for use in healthcare applications.
+
+Large Language Models (LLMs) have revolutionized natural language 
+processing by demonstrating unprecedented capabilities in generating 
+coherent, contextually relevant text. However, a significant challenge 
+is their propensity to produce hallucinations --- outputs that may be 
+fluent and plausible but are factually incorrect, unsupported by 
+evidence, or entirely fabricated. This issue is particularly concerning 
+in medicine, where incorrect information can lead to serious consequences 
+for patient care and safety.
+
+Despite the growing body of research on hallucination in general NLP 
+contexts, relatively little empirical work systematically characterizes 
+hallucination behavior in medical LLMs, or directly compares the 
+effectiveness of inference-time versus training-time mitigation 
+strategies. In this paper, we address this gap by evaluating multiple 
+LLMs on standardized medical QA benchmarks under four experimental 
+conditions: zero-shot prompting, chain-of-thought prompting, 
+retrieval-augmented generation, and supervised fine-tuning. By 
+systematically comparing these interventions, we aim to answer not only 
+how often LLMs hallucinate on medical questions, but which type of 
+intervention works best --- and whether combining them yields further 
+gains.
+
+% ── RELATED WORK ─────────────────────────────────────────────────────────────
 \section{Related Work}
 
 \subsection{Hallucination in Large Language Models}
-Hallucination is a widely recognized problem in large language models (LLMs), where a model generates fluent and plausible text that is factually incorrect, unsupported by the input, or inconsistent with external knowledge. Prior work has commonly categorized hallucinations into intrinsic hallucinations, which contradict the source context, and extrinsic hallucinations, which introduce information not supported by the provided evidence \cite{ji2023survey}. This distinction is particularly useful for analyzing medical-domain outputs, since a model may either contradict the clinical evidence given in a question or fabricate unsupported medical explanations beyond the available information.
-Hallucination has also been extensively studied in abstractive summarization, where models often generate coherent but unfaithful content that is not grounded in the source document \cite{maynez2020faithfulness}. These findings are relevant to medical LLMs because medical responses often require both factual accuracy and faithfulness to the provided clinical context. In healthcare settings, unsupported or fabricated claims can be especially harmful, since users may interpret fluent medical explanations as reliable advice. Therefore, hallucination evaluation in the medical domain requires not only measuring answer correctness, but also examining whether the generated explanation is grounded, clinically plausible, and consistent with the given evidence.
+Hallucination is a widely recognized problem in LLMs, where a model 
+generates fluent and plausible text that is factually incorrect, 
+unsupported by the input, or inconsistent with external knowledge. Prior 
+work has categorized hallucinations into intrinsic hallucinations, which 
+contradict the source context, and extrinsic hallucinations, which 
+introduce information not supported by the provided evidence 
+\cite{ji2023survey}. Hallucination has also been studied in abstractive 
+summarization, where models often generate coherent but unfaithful 
+content \cite{maynez2020faithfulness}. These findings are relevant to 
+medical LLMs because medical responses require both factual accuracy and 
+faithfulness to clinical context.
+
 \subsection{Medical Question Answering and Clinical Reasoning}
-Recent work has shown that LLMs can achieve strong performance on medical question-answering benchmarks such as MedQA, MedMCQA, and PubMedQA, but they remain vulnerable to confident errors on complex clinical reasoning tasks \cite{lievin2024medical}. Medical question answering is challenging because it often requires multi-step reasoning, domain-specific knowledge, and careful interpretation of symptoms, laboratory findings, or biomedical evidence. Unlike general-domain QA, medical QA has a higher cost of error, making hallucination and unsupported reasoning especially important to evaluate.
-Medical benchmarks provide a useful setting for studying hallucination because they offer verifiable ground-truth answers. MedQA, which is based on United States Medical Licensing Examination-style questions, tests clinical and diagnostic reasoning through multiple-choice questions. PubMedQA, by contrast, focuses on biomedical yes/no/maybe questions grounded in PubMed abstracts. These datasets allow researchers to evaluate different dimensions of medical LLM behavior, including factual recall, evidence grounding, reasoning ability, and answer-format reliability.
-Prior studies have also developed medical hallucination benchmarks to evaluate whether LLMs produce unreliable or unsupported medical content. For example, Med-HALT introduces medical-domain hallucination tests that include both reasoning-based and memory-based hallucination evaluations \cite{pal2023medhalt}. Such work highlights the need to move beyond simple accuracy and examine the specific ways in which medical LLMs fail. Our work follows this direction by empirically comparing hallucination behavior across prompting and retrieval settings in medical QA tasks.
+Recent work has shown that LLMs can achieve strong performance on 
+medical QA benchmarks such as MedQA, MedMCQA, and PubMedQA, but remain 
+vulnerable to confident errors on complex clinical reasoning tasks 
+\cite{lievin2024medical}. Medical benchmarks provide a useful setting 
+for studying hallucination because they offer verifiable ground-truth 
+answers. Prior studies have also developed medical hallucination 
+benchmarks, such as Med-HALT, which evaluates reasoning-based and 
+memory-based hallucination in medical LLMs \cite{pal2023medhalt}.
+
 \subsection{Chain-of-Thought Prompting}
-Chain-of-thought (CoT) prompting is an inference-time prompting strategy that encourages a model to generate intermediate reasoning steps before producing a final answer. Instead of asking the model to directly output an answer, CoT prompting asks the model to reason through the problem step by step and then provide a final response. This method was introduced as a way to improve LLM performance on complex reasoning tasks, where decomposing a problem into intermediate steps can help the model arrive at a more accurate answer \cite{wei2022chain}. Later work also showed that sampling multiple reasoning paths and selecting the most consistent answer can further improve reasoning performance \cite{wang2023selfconsistency}.
-CoT prompting is especially relevant to medical QA because many medical questions require multi-step clinical reasoning. For example, answering a diagnosis question may require identifying key symptoms, connecting them to possible diseases, ruling out distractor options, and selecting the most clinically appropriate answer. By making this reasoning process explicit, CoT may help the model organize relevant medical information before committing to a final answer. In this sense, CoT can be viewed as a potential hallucination mitigation strategy: if the model reasons more carefully, it may be less likely to generate an unsupported or incorrect answer.
-However, the effect of CoT on hallucination is not guaranteed. Although CoT can improve reasoning performance in some settings, it can also produce longer generations that introduce additional opportunities for error. In medical QA, a model may generate a fluent but incorrect reasoning chain, rely on unsupported assumptions, or include fabricated medical explanations before giving its final answer. These issues are particularly concerning because a detailed explanation can make an incorrect answer appear more convincing. In addition, CoT outputs may be harder to parse reliably than direct zero-shot answers, especially when the model produces verbose explanations, repeated phrases, or unclear final-answer markers.
-For these reasons, our study treats CoT prompting as an empirical condition rather than assuming that it will always improve medical QA performance. We compare CoT prompting against a zero-shot baseline to examine two competing possibilities. The first possibility is that CoT improves reliability by encouraging more explicit clinical reasoning and reducing hallucination. The second possibility is that CoT hurts performance by increasing output noise, unsupported intermediate reasoning, or answer-extraction failures. This comparison allows us to evaluate whether CoT is actually beneficial for hallucination reduction in medical-domain LLMs.
+Chain-of-thought (CoT) prompting encourages a model to generate 
+intermediate reasoning steps before producing a final answer 
+\cite{wei2022chain}. While CoT has been shown to improve reasoning 
+on complex tasks, it can also produce longer generations that introduce 
+additional opportunities for error. In medical QA, a model may generate 
+a fluent but incorrect reasoning chain before giving its final answer, 
+and CoT outputs may be harder to parse reliably \cite{wang2023selfconsistency}.
+
 \subsection{Retrieval-Augmented Generation}
-Retrieval-augmented generation (RAG) has been proposed as another inference-time strategy for improving factuality in knowledge-intensive tasks. RAG combines a generative model with an external retrieval component, allowing the model to condition its output on retrieved documents rather than relying only on parametric knowledge stored in the model weights \cite{lewis2020retrieval}. This is especially useful in domains such as medicine, where factual accuracy and access to up-to-date evidence are important.
-In the medical domain, retrieval can help ground model outputs in biomedical abstracts, clinical documents, or other external evidence sources. By providing relevant context at inference time, RAG may reduce extrinsic hallucination and improve answer faithfulness. However, RAG does not fully eliminate hallucination. A model may still misinterpret retrieved evidence, overgeneralize from irrelevant passages, or fail to align its final answer with the retrieved context. Therefore, RAG should be evaluated not only by accuracy but also by hallucination rate, evidence use, and output stability.
-Our work builds on this line of research by comparing standard zero-shot prompting, CoT prompting, and RAG within medical QA settings. This comparison allows us to examine whether hallucination is better mitigated by encouraging explicit reasoning, grounding the model in retrieved evidence, or combining model knowledge with task-specific prompt design.\section{Progress} 
+Retrieval-augmented generation (RAG) combines a generative model with 
+an external retrieval component, allowing the model to condition its 
+output on retrieved documents rather than relying only on parametric 
+knowledge \cite{lewis2020retrieval}. In the medical domain, retrieval 
+can help ground model outputs in biomedical abstracts or clinical 
+documents, potentially reducing extrinsic hallucination. However, RAG 
+does not fully eliminate hallucination, as a model may still 
+misinterpret retrieved evidence or fail to align its answer with the 
+retrieved context.
 
-\subsection{Methods}
-% TODO: Cite MedQA and PubMedQA datasets
-% We might want to list this step by step to make it clearer
-To conduct our empirical analysis of hallucination behavior in medical LLMs, we have selected two widely used datasets: MedQA and PubMedQA. The MedQA dataset consists of multiple-choice questions derived from the United States Medical Licensing Examination (USMLE), covering a broad range of medical topics and requiring complex reasoning and domain-specific knowledge. The PubMedQA dataset, on the other hand, consists of yes/no questions based on abstracts from the PubMed database, which require the model to extract relevant information from the provided abstracts to generate accurate responses. We have chosen these datasets because they represent different types of medical tasks and require varying levels of reasoning and knowledge, allowing us to comprehensively evaluate the hallucination behavior of LLMs across a spectrum of medical applications. We have implemented a systematic evaluation framework that includes regular prompting, chain-of-thought prompting, and Retrieval-Augmented Generation (RAG)
-to assess the performance of the LLMs on these datasets. Regular prompting involves providing the model with a straightforward prompt to generate a response, while chain-of-thought prompting encourages the model to generate intermediate reasoning steps before arriving at a final answer. RAG combines retrieval-based methods with generative models, allowing the model to access external knowledge sources to generate more accurate and relevant responses. By comparing the outputs generated by the LLMs under these different prompting strategies, we aim to identify patterns of hallucination and evaluate the effectiveness of various techniques for mitigating this issue in medical LLMs.\\
-\subsection{Preliminary Findings}
+\subsection{Fine-Tuning for Medical NLP}
+Supervised fine-tuning (SFT) on domain-specific data has been shown to 
+improve model performance on medical tasks \cite{singhal2023large}. 
+Domain-specific pretraining, as in BioGPT \cite{luo2022biogpt} and 
+BioMistral \cite{labrak2024biomistral}, has also been proposed as a way 
+to reduce hallucination by internalizing medical knowledge during 
+training. However, the relative effectiveness of fine-tuning versus 
+inference-time interventions such as RAG remains underexplored, 
+motivating our direct comparison.
 
-We conducted a preliminary comparison of Meta-Llama-3-8B-Instruct under two inference conditions on the MedQA benchmark: standard zero-shot prompting and chain-of-thought (CoT) prompting. On 500 evaluation samples, zero-shot prompting yielded 302 correct predictions (60.4\% accuracy), a hallucination rate of 39.6\%, 4 parse failures, and an average BERTScore F1 of 0.819.
-In contrast, CoT prompting yielded 282 correct predictions (56.4\% accuracy), a hallucination rate of 43.6\%, 18 parse failures, and an average BERTScore F1 of 0.814. These results indicate that, in our current MedQA setting, CoT does not outperform the zero-shot baseline for Llama3. Instead, it is associated with slightly lower accuracy, a higher hallucination rate, and reduced output stability.
+% ── METHODS ──────────────────────────────────────────────────────────────────
+\section{Methods}
 
-Inspection of the raw generations suggests that this pattern may be partly explained by differences in output format between the two prompting conditions. Under zero-shot prompting, Llama3 usually provides an answer letter that can be extracted reliably, although many responses still include additional explanatory text. 
-Under CoT prompting, the model more frequently produces longer reasoning traces and explicit answer markers, but these generations are also more likely to contain repetition, trailing phrases, and other formatting artifacts. As a result, CoT outputs are more vulnerable to parsing errors in the current pipeline.
+\subsection{Datasets}
+We evaluate on two medical QA benchmarks that represent different task 
+types and hallucination detection modalities.
 
-Taken together, these findings suggest that explicit reasoning prompts do not automatically improve performance on medical multiple-choice QA. In our current setup, longer CoT generations may create additional opportunities for noisy intermediate reasoning and answer extraction failure. 
-We therefore treat this as a preliminary result tied to the current prompting and evaluation design, rather than as a general claim that CoT is ineffective in medical QA. In future work, we plan to investigate whether stricter output constraints and more robust answer extraction can improve the reliability of CoT prompting.
-\subsection{RAG Preliminary Findings}
+\textbf{MedQA (USMLE)} \cite{jin2021disease} consists of approximately 
+12,000 multiple-choice questions derived from United States Medical 
+Licensing Examinations, covering a broad range of clinical topics. 
+Gold-standard answer letters allow direct accuracy measurement. We 
+evaluate on the held-out test split, sampling 450--500 items per 
+experimental condition.
 
-We evaluated three models under Retrieval-Augmented Generation (RAG) conditions on the PubMedQA benchmark using BM25 retrieval with top-2 abstracts. On 450 evaluation samples, Meta-Llama-3-8B-Instruct achieved 73.4\% accuracy with a hallucination rate of 28.9\% and an average BERTScore F1 of 0.850. BioMistral-7B achieved 52.9\% accuracy with a hallucination rate of 54.9\% and BERTScore F1 of 0.816. BioGPT achieved 54.4\% accuracy but with a hallucination rate of 89.1\% and a parse failure rate of 80\%, indicating the model struggled to generate structured yes/no/maybe responses.
+\textbf{PubMedQA} \cite{jin2019pubmedqa} consists of 450 
+expert-annotated yes/no/maybe questions derived from PubMed research 
+abstracts. Each question is paired with the source abstract, making it 
+ideal for evaluating context-grounded generation and retrieval 
+augmentation. We use the full labeled training split (450 items) for 
+all PubMedQA conditions.
 
-These preliminary findings suggest that general-purpose models such as Llama3 benefit more from RAG than smaller domain-specific models. BioGPT's high parse failure rate indicates that the current prompting strategy may not be well-suited for smaller generative models, which we plan to address in future experiments. Comparison between RAG and zero-shot conditions on the same PubMedQA questions remains pending and will be included in the final report.
+\subsection{Models}
+We compare three models spanning capability tiers:
 
+\textbf{Meta-Llama-3-8B-Instruct} is a large general-purpose 
+instruction-tuned model serving as our strong baseline. It was not 
+fine-tuned on medical data.
+
+\textbf{BioMistral-7B} \cite{labrak2024biomistral} is a 
+medically-adapted model built on Mistral-7B and further pretrained on 
+biomedical corpora. It allows us to test whether domain-specific 
+pretraining reduces hallucination relative to a general model.
+
+\textbf{BioGPT} \cite{luo2022biogpt} is a smaller (1.5B parameter) 
+generative model pretrained on PubMed abstracts. It serves as both a 
+small-model baseline and the target for our supervised fine-tuning 
+experiments.
+
+\subsection{Experimental Conditions}
+We evaluate each model under the following conditions:
+
+\textbf{Zero-shot prompting} provides the model with the question and 
+answer choices (MedQA) or question alone (PubMedQA) with no additional 
+context or reasoning instruction.
+
+\textbf{Chain-of-thought (CoT) prompting} asks the model to reason 
+step-by-step before providing a final answer, ending with 
+\texttt{Answer: <letter>}.
+
+\textbf{Retrieval-augmented generation (RAG)} uses BM25 retrieval over 
+the PubMedQA abstract corpus with top-$k{=}2$ abstracts prepended as 
+context, using a fixed prompt template across all models.
+
+\textbf{Supervised fine-tuning (SFT)} fine-tunes BioGPT on the full 
+MedQA training split (10,178 samples) for 3 epochs using standard 
+next-token prediction loss, learning rate $2 \times 10^{-5}$, effective 
+batch size 16, and fp16 mixed precision on a single A100 GPU.
+
+\textbf{SFT + RAG} applies RAG at inference time to the fine-tuned 
+BioGPT model, testing whether the two interventions are complementary 
+or redundant.
+
+\subsection{Evaluation Metrics}
+
+\textbf{Accuracy} is the proportion of outputs that match the 
+gold-standard answer.
+
+\textbf{Error rate} is the proportion of outputs that are either 
+incorrect or unparseable. For MedQA conditions (zero-shot, CoT, SFT), 
+we use error rate rather than ``hallucination rate'' since there is no 
+retrieved context to assess faithfulness against --- incorrect answers 
+reflect factual errors rather than hallucination in the retrieval 
+faithfulness sense.
+
+\textbf{Hallucination rate} is reserved for RAG conditions on PubMedQA, 
+where it captures outputs that are either incorrect or unfaithful to the 
+retrieved context.
+
+\textbf{Parse failure rate} is reported separately as the proportion of 
+outputs from which no structured answer (letter or yes/no/maybe) could 
+be extracted. Parse failures are counted as errors in all conditions 
+since an unparseable output is clinically unusable.
+
+\textbf{BERTScore F1} measures semantic similarity between generated 
+outputs and gold answers, serving as a secondary signal.
+
+% ── RESULTS ──────────────────────────────────────────────────────────────────
 \section{Results}
 
-\subsection{MedQA: Zero-Shot vs.\ Chain-of-Thought}
+\subsection{RQ1: Zero-Shot and Chain-of-Thought on MedQA}
 
-Table~\ref{tab:medqa-llama} summarises the performance of Meta-Llama-3-8B-Instruct on the MedQA benchmark under zero-shot and chain-of-thought (CoT) prompting (500 samples).
+Table~\ref{tab:medqa-llama} summarises the performance of 
+Meta-Llama-3-8B-Instruct on MedQA under zero-shot and CoT prompting.
 
 \begin{table}[h]
   \centering
   \begin{tabular}{lcc}
-    \hline
+    \toprule
     \textbf{Metric} & \textbf{Zero-Shot} & \textbf{CoT} \\
-    \hline
+    \midrule
     Correct           & 302       & 282      \\
     Accuracy          & 60.4\%    & 56.4\%   \\
-    Hallucination Rate& 39.6\%    & 43.6\%   \\
+    Error Rate        & 39.6\%    & 43.6\%   \\
     Parse Failures    & 4         & 18       \\
-    Avg.\ BERTScore F1& 0.819    & 0.814    \\
-    \hline
+    BERTScore F1      & 0.819     & 0.814    \\
+    \bottomrule
   \end{tabular}
   \caption{MedQA results for Llama-3-8B-Instruct (500 samples).}
   \label{tab:medqa-llama}
 \end{table}
 
-Zero-shot prompting outperforms CoT on every metric. CoT produces longer reasoning traces that introduce more formatting artifacts, repetition, and parse failures, leading to a higher measured hallucination rate. These results suggest that explicit reasoning prompts do not automatically improve performance on medical multiple-choice QA.
+Zero-shot prompting outperforms CoT on every metric. CoT produces 
+longer reasoning traces that introduce more formatting artifacts, 
+repetition, and parse failures, leading to a higher measured error rate. 
+These results suggest that explicit reasoning prompts do not 
+automatically improve performance on medical multiple-choice QA.
 
-We observe a consistent pattern with Qwen2.5-3B-Instruct on MedQA (200 samples), as shown in Table~\ref{tab:medqa-qwen}.
+We observe a consistent pattern with Qwen2.5-3B-Instruct on MedQA 
+(200 samples), as shown in Table~\ref{tab:medqa-qwen}.
 
 \begin{table}[h]
   \centering
   \begin{tabular}{lcc}
-    \hline
+    \toprule
     \textbf{Metric} & \textbf{Zero-Shot} & \textbf{CoT} \\
-    \hline
+    \midrule
     Correct           & 86        & 47       \\
     Accuracy          & 43.0\%    & 23.5\%   \\
-    Hallucination Rate& 57.0\%    & 76.5\%   \\
+    Error Rate        & 57.0\%    & 76.5\%   \\
     Parse Failures    & 1         & 12       \\
-    \hline
+    \bottomrule
   \end{tabular}
   \caption{MedQA results for Qwen2.5-3B-Instruct (200 samples).}
   \label{tab:medqa-qwen}
 \end{table}
 
-Qwen2.5-3B-Instruct performs substantially worse than Llama-3-8B-Instruct on MedQA under both prompting conditions. CoT prompting again degrades performance relative to zero-shot, with accuracy dropping from 43.0\% to 23.5\% and hallucination rate increasing from 57.0\% to 76.5\%. The gap between zero-shot and CoT is even larger for Qwen2.5-3B than for Llama-3, suggesting that smaller models are more susceptible to the noise introduced by chain-of-thought reasoning.
+Qwen2.5-3B-Instruct performs substantially worse than 
+Llama-3-8B-Instruct under both conditions. The gap between zero-shot 
+and CoT is even larger for Qwen2.5-3B, suggesting that smaller models 
+are more susceptible to the noise introduced by chain-of-thought 
+reasoning.
 
-\subsection{PubMedQA: Retrieval-Augmented Generation}
+\subsection{RQ2: Retrieval-Augmented Generation on PubMedQA}
 
-We evaluated four models under RAG conditions on PubMedQA using BM25 retrieval with top-2 abstracts. Table~\ref{tab:pubmedqa-rag} reports the results.
+We evaluated four models under RAG conditions on PubMedQA using BM25 
+retrieval with top-2 abstracts. Table~\ref{tab:pubmedqa-rag} reports 
+the results.
 
 \begin{table}[h]
   \centering
   \begin{tabular}{lccc}
-    \hline
+    \toprule
     \textbf{Model} & \textbf{Acc.} & \textbf{Halluc.} & \textbf{BERT F1} \\
-    \hline
+    \midrule
     Llama-3-8B      & 73.4\% & 28.9\% & 0.850 \\
     BioMistral-7B   & 52.9\% & 54.9\% & 0.816 \\
     BioGPT          & 54.4\% & 89.1\% & ---   \\
     Qwen2.5-3B      & 19.0\% & 81.0\% & ---   \\
-    \hline
+    \bottomrule
   \end{tabular}
-  \caption{PubMedQA RAG results. Llama-3 and BioMistral evaluated on 450 samples; Qwen2.5-3B-Instruct on 200 samples.}
+  \caption{PubMedQA RAG results (450 samples for Llama-3 and 
+  BioMistral; 200 samples for Qwen2.5-3B).}
   \label{tab:pubmedqa-rag}
 \end{table}
 
-Llama-3-8B-Instruct achieves the highest accuracy and lowest hallucination rate, suggesting that larger, general-purpose instruction-tuned models benefit most from retrieval augmentation. BioGPT and Qwen2.5-3B-Instruct exhibit very high hallucination rates; inspection reveals that both models overwhelmingly predict ``maybe'' (Qwen2.5-3B predicted ``maybe'' for 175 out of 200 questions), failing to commit to definitive yes/no answers even when the retrieved evidence supports one.
+Llama-3-8B-Instruct achieves the highest accuracy and lowest 
+hallucination rate, suggesting that larger, general-purpose 
+instruction-tuned models benefit most from retrieval augmentation. 
+BioGPT and Qwen2.5-3B exhibit very high hallucination rates; inspection 
+reveals that both models overwhelmingly predict ``maybe,'' failing to 
+commit to definitive yes/no answers even when the retrieved evidence 
+supports one.
+
+\subsection{RQ3: Effect of Fine-Tuning on Hallucination}
+
+We fine-tuned BioGPT on the full MedQA training split (10,178 samples) 
+for 3 epochs. Training loss decreased steadily across epochs 
+($2.05 \rightarrow 1.73 \rightarrow 1.63$) with validation loss 
+following the same trend ($1.78 \rightarrow 1.72 \rightarrow 1.71$), 
+confirming convergence without overfitting. The fine-tuned model was 
+evaluated on a matched subsample of 450 MedQA test items (seed=42) 
+alongside the zero-shot baseline. Table~\ref{tab:rq3} reports the 
+results.
+
+\begin{table}[h!]
+  \centering
+  \small
+  \begin{tabular}{lccc}
+    \toprule
+    \textbf{Condition} & \textbf{Accuracy} & \textbf{Error Rate} & \textbf{Parse Fail} \\
+    \midrule
+    BioGPT zero-shot   & 17.78\% & 82.22\% & 23.11\% \\
+    BioGPT fine-tuned  & 24.44\% & 75.56\% &  0.00\% \\
+    \bottomrule
+  \end{tabular}
+  \caption{RQ3: BioGPT on MedQA before and after fine-tuning 
+  (450 matched samples).}
+  \label{tab:rq3}
+\end{table}
+
+Fine-tuning improved accuracy by 6.66 percentage points and 
+completely eliminated parse failures (23.11\% $\rightarrow$ 0.00\%), 
+indicating the model learned to produce clean answer letters 
+consistently. Despite this improvement, fine-tuned BioGPT (24.44\%) 
+remains substantially below zero-shot Llama-3-8B-Instruct (60.4\%), 
+suggesting that model scale and instruction-tuning capability are more 
+important factors than domain-specific fine-tuning alone.
+
+\subsection{RQ4: RAG and Fine-Tuning Interaction}
+
+To test whether RAG and fine-tuning are complementary, we applied RAG 
+at inference time to the fine-tuned BioGPT model on PubMedQA. 
+Table~\ref{tab:rq4} reports the interaction results alongside the 
+individual conditions for comparison.
+
+\begin{table}[h!]
+  \centering
+  \small
+  \begin{tabular}{lccc}
+    \toprule
+    \textbf{Condition} & \textbf{Accuracy} & \textbf{Halluc.} & \textbf{Parse Fail} \\
+    \midrule
+    BioGPT RAG only    & 54.4\%  & 89.1\%  & 80.0\%  \\
+    \midrule
+    BioGPT RAG only    & 54.4\%  & 89.1\%  & 80.0\%  \\
+    BioGPT SFT only    & 24.44\% & 75.56\% &  0.0\%  \\
+    BioGPT SFT + RAG   &  3.33\% & 96.67\% & 93.33\% \\
+    \bottomrule
+  \end{tabular}
+  \caption{RQ4: Interaction between fine-tuning and RAG for BioGPT 
+  on PubMedQA (450 samples).}
+  \label{tab:rq4}
+\end{table}
+
+Combining fine-tuning with RAG leads to catastrophic degradation --- 
+accuracy drops to 3.33\% with a 93.33\% parse failure rate. This 
+suggests that fine-tuning on MedQA (multiple-choice format) caused the 
+model to lose the output format flexibility required for PubMedQA 
+(yes/no/maybe format). When presented with RAG context at inference 
+time, the fine-tuned model fails to generate structured responses, 
+indicating that the two interventions are incompatible in their current 
+forms for BioGPT.
 
 \subsection{Prediction Distribution Analysis}
 
-Qwen2.5-3B-Instruct shows a strong bias toward hedging. On PubMedQA, 87.5\% of its predictions were ``maybe,'' compared to a gold-label ``maybe'' rate of only 11.0\%. On MedQA (zero-shot), the model exhibited a preference for option~D (55.0\% of predictions vs.\ 26.0\% in the gold labels), while CoT prompting shifted the distribution heavily toward option~A (60.5\%). This sensitivity of the answer distribution to the prompting strategy—with a large corresponding drop in accuracy (43.0\% to 23.5\%)—suggests that the model's predictions are driven more by surface-level prompt cues than by genuine medical reasoning.
+Qwen2.5-3B-Instruct shows a strong bias toward hedging. On PubMedQA, 
+87.5\% of its predictions were ``maybe,'' compared to a gold-label 
+``maybe'' rate of only 11.0\%. On MedQA (zero-shot), the model 
+exhibited a preference for option~D (55.0\% of predictions vs.\ 26.0\% 
+in the gold labels), while CoT prompting shifted the distribution 
+heavily toward option~A (60.5\%). This sensitivity of the answer 
+distribution to the prompting strategy suggests that the model's 
+predictions are driven more by surface-level prompt cues than by 
+genuine medical reasoning.
 
-\subsection{Summary of Findings}
+% ── DISCUSSION ───────────────────────────────────────────────────────────────
+\section{Discussion}
 
-Across all experiments, three key findings emerge:
+\subsection{Effect of Model Scale}
+Across all conditions, model scale and instruction-tuning capability 
+emerge as the dominant factors in hallucination reduction. 
+Llama-3-8B-Instruct consistently outperforms both BioMistral-7B and 
+BioGPT despite having no medical domain pretraining. This is consistent 
+with recent findings that large general models with strong instruction 
+tuning can match or exceed smaller specialized models on medical 
+benchmarks \cite{singhal2023large}. Our results suggest that investing 
+in larger, better-aligned general models may be more effective than 
+domain-specific pretraining to reduce hallucination in medical QA.
 
-\begin{enumerate}
-    \item \textbf{Larger instruction-tuned models hallucinate less under RAG.} Llama-3-8B-Instruct achieves 73.4\% accuracy on PubMedQA with RAG, substantially outperforming both domain-specific and smaller models.
-    \item \textbf{CoT prompting does not reliably reduce hallucination.} On MedQA, CoT yields lower accuracy and higher hallucination rates than zero-shot prompting, largely due to increased output noise and parse failures.
-    \item \textbf{Smaller models exhibit systematic prediction biases.} Qwen2.5-3B-Instruct and BioGPT show degenerate prediction distributions (e.g., overwhelming ``maybe'' bias), indicating that these models lack the capacity to leverage retrieved evidence effectively for medical QA.
-\end{enumerate}
+\subsection{Inference-Time vs.\ Training-Time Interventions}
+Our results reveal an important asymmetry between inference-time and 
+training-time interventions. RAG substantially reduces hallucination for 
+Llama-3-8B (28.9\% hallucination rate) but provides limited benefit for 
+smaller models. Fine-tuning improves BioGPT accuracy by 6.66 percentage 
+points and eliminates parse failures, but absolute accuracy remains 
+low. Critically, combining both interventions (SFT + RAG) leads to 
+catastrophic failure for BioGPT, suggesting that fine-tuning on a 
+specific answer format (multiple-choice letters) degrades the model's 
+ability to generalize to a different format (yes/no/maybe) even when 
+provided with retrieved context. This incompatibility highlights the 
+importance of evaluating combined interventions rather than assuming 
+they are additive.
 
-\subsection{Future Work}
+\subsection{Limitations}
+Several limitations should be noted. First, we do not have a zero-shot 
+baseline on PubMedQA for direct RAG vs.\ no-RAG comparison on the same 
+questions, which would strengthen our RQ2 conclusions. Second, 
+BioGPT's poor performance may partly reflect its lack of instruction 
+tuning rather than fundamental model limitations --- instruction-tuned 
+variants might perform significantly better. Third, our fine-tuning 
+used only 3 epochs; longer training or alternative objectives such as 
+RLHF or DPO may yield greater hallucination reductions. Finally, we use 
+BM25 retrieval with top-2 abstracts, and denser retrieval methods such 
+as MedCPT may improve RAG quality.
 
-Our future work will focus on the following directions:
+% ── CONCLUSION ───────────────────────────────────────────────────────────────
+\section{Conclusion}
 
-\begin{itemize}
-    \item \textbf{Improve the robustness of CoT prompting.}  
-    Our current results suggest that chain-of-thought (CoT) prompting is more vulnerable to formatting noise, repetition, trailing text, and parse failures. To address this issue, we plan to test stricter output constraints, shorter reasoning prompts, and alternative prompt templates that require the model to end with one clearly formatted final answer. We also plan to improve the answer extraction rules so that small variations in output style do not overly affect the measured hallucination rate.
+We presented a controlled empirical study of hallucination behavior in 
+medical LLMs across four intervention conditions. Our key findings are: 
+(1) larger instruction-tuned models hallucinate less under RAG, with 
+Llama-3-8B achieving 73.4\% accuracy on PubMedQA; (2) CoT prompting 
+consistently degrades performance relative to zero-shot due to output 
+noise and parse failures; (3) fine-tuning BioGPT on MedQA improves 
+accuracy by 6.66 points and eliminates parse failures; and (4) 
+combining fine-tuning with RAG leads to catastrophic output degradation 
+for BioGPT, suggesting the two interventions are incompatible in their 
+current forms. These findings highlight that model scale and 
+instruction-tuning capability are more important than domain-specific 
+adaptation for hallucination reduction, and that combined interventions 
+must be carefully evaluated rather than assumed to be additive.
 
-    \item \textbf{Continue fine-tuning experiments.}  
-    We will continue the fine-tuning component of the project and investigate whether combining fine-tuning with retrieval can improve reliability beyond either approach alone. In particular, we want to study whether domain-specific fine-tuning can reduce hallucination further when paired with RAG.
-
-    \item \textbf{Evaluate additional models.}  
-    We plan to test newer and more strongly instruction-tuned models, as well as additional medically adapted models, to examine whether the current CoT limitations are specific to the models we have already tested.
-\end{itemize}
-
+% ── REFERENCES ───────────────────────────────────────────────────────────────
 \bibliography{references}
 
 \end{document}
