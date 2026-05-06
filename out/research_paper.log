@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  21 APR 2026 19:35
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  6 MAY 2026 16:57
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -262,26 +262,26 @@ File: l3backend-xetex.def 2024-05-08 L3 backend support: XeTeX
 ) (out/research_paper.aux)
 \openout1 = `research_paper.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -320,18 +320,18 @@ LaTeX Font Info:    ... okay on input line 55.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring ON on input line 55.
+Package hyperref Info: Link coloring ON on input line 54.
 (out/research_paper.out) (out/research_paper.out)
 \@outlinefile=\write3
 \openout3 = `research_paper.out'.
 
-LaTeX Info: Redefining \microtypecontext on input line 55.
-Package microtype Info: Applying patch `item' on input line 55.
-Package microtype Info: Applying patch `toc' on input line 55.
-Package microtype Info: Applying patch `eqnum' on input line 55.
-Package microtype Info: Applying patch `footnote' on input line 55.
-Package microtype Info: Applying patch `verbatim' on input line 55.
-LaTeX Info: Redefining \microtypesetup on input line 55.
+LaTeX Info: Redefining \microtypecontext on input line 54.
+Package microtype Info: Applying patch `item' on input line 54.
+Package microtype Info: Applying patch `toc' on input line 54.
+Package microtype Info: Applying patch `eqnum' on input line 54.
+Package microtype Info: Applying patch `footnote' on input line 54.
+Package microtype Info: Applying patch `verbatim' on input line 54.
+LaTeX Info: Redefining \microtypesetup on input line 54.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: No adjustment of tracking.
@@ -343,16 +343,16 @@ File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman (RS)
 )
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 56.
+(Font)              <12> on input line 55.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 56.
+(Font)              <8> on input line 55.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 56.
-LaTeX Font Info:    Trying to load font information for U+lasy on input line 56.
+(Font)              <6> on input line 55.
+LaTeX Font Info:    Trying to load font information for U+lasy on input line 55.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
-LaTeX Font Info:    Trying to load font information for T1+pcr on input line 56.
+LaTeX Font Info:    Trying to load font information for T1+pcr on input line 55.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
@@ -373,77 +373,212 @@ Missing character: There is no — ("2014) in font ptmr8t!
 
 
 ]
-Underfull \hbox (badness 2409) in paragraph at lines 69--71
+Underfull \hbox (badness 10000) in paragraph at lines 70--73
+\T1/ptm/m/n/10.95 strong per-for-mance on med-i-cal question-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 70--73
+\T1/ptm/m/n/10.95 answering bench-marks such as MedQA,
+ []
+
+
+Underfull \hbox (badness 2653) in paragraph at lines 70--73
+\T1/ptm/m/n/10.95 re-quires multi-step rea-son-ing, domain-specific
+ []
+
+
+Underfull \hbox (badness 1590) in paragraph at lines 70--73
+\T1/ptm/m/n/10.95 un-sup-ported rea-son-ing es-pe-cially im-por-tant to
+ []
+
+
+Underfull \hbox (badness 1721) in paragraph at lines 70--73
+\T1/ptm/m/n/10.95 ing Examination-style ques-tions, tests clin-i-cal
+ []
+
+
+Underfull \hbox (badness 5417) in paragraph at lines 70--73
+\T1/ptm/m/n/10.95 biomed-i-cal yes/no/maybe ques-tions grounded
+ []
+
+
+Underfull \hbox (badness 2486) in paragraph at lines 70--73
+\T1/ptm/m/n/10.95 in PubMed ab-stracts. These datasets al-low
+ []
+
+
+Underfull \hbox (badness 7030) in paragraph at lines 70--73
+\T1/ptm/m/n/10.95 re-searchers to eval-u-ate dif-fer-ent di-men-sions
+ []
+
+
+Underfull \hbox (badness 3078) in paragraph at lines 70--73
+\T1/ptm/m/n/10.95 of med-i-cal LLM be-hav-ior, in-clud-ing fac-tual
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 70--73
+\T1/ptm/m/n/10.95 de-vel-oped med-i-cal hal-lu-ci-na-tion bench-marks
+ []
+
+
+Underfull \hbox (badness 1281) in paragraph at lines 70--73
+\T1/ptm/m/n/10.95 to eval-u-ate whether LLMs pro-duce un-re-li-able
+ []
+
+
+Underfull \hbox (badness 1292) in paragraph at lines 70--73
+\T1/ptm/m/n/10.95 na-tion tests that in-clude both reasoning-based
+ []
+
+
+
+
+
+[2]
+
+
+Underfull \hbox (badness 2409) in paragraph at lines 86--88
 \T1/ptm/m/n/10.95 Li-cens-ing Ex-am-i-na-tion (USMLE), cov-er-ing a
  []
 
 
-Underfull \hbox (badness 2165) in paragraph at lines 69--71
+Underfull \hbox (badness 2165) in paragraph at lines 86--88
 \T1/ptm/m/n/10.95 broad range of med-i-cal top-ics and re-quir-ing
  []
 
 
-Underfull \hbox (badness 2293) in paragraph at lines 69--71
+Underfull \hbox (badness 2293) in paragraph at lines 86--88
 \T1/ptm/m/n/10.95 We have cho-sen these datasets be-cause they
  []
 
 
-Underfull \hbox (badness 2818) in paragraph at lines 69--71
+Underfull \hbox (badness 2818) in paragraph at lines 86--88
 \T1/ptm/m/n/10.95 the model with a straight-for-ward prompt to
  []
 
 
-Underfull \hbox (badness 5908) in paragraph at lines 69--71
+Underfull \hbox (badness 5908) in paragraph at lines 86--88
 \T1/ptm/m/n/10.95 gen-er-ate a re-sponse, while chain-of-thought
  []
 
 
-Underfull \hbox (badness 2538) in paragraph at lines 69--71
+Underfull \hbox (badness 2538) in paragraph at lines 86--88
 \T1/ptm/m/n/10.95 prompt-ing en-cour-ages the model to gen-er-ate
  []
 
 
-Underfull \hbox (badness 2020) in paragraph at lines 69--71
+Underfull \hbox (badness 2020) in paragraph at lines 86--88
 \T1/ptm/m/n/10.95 aim to iden-tify pat-terns of hal-lu-ci-na-tion and
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 69--71
+Underfull \hbox (badness 10000) in paragraph at lines 86--88
 
  []
 
 
-Underfull \hbox (badness 2012) in paragraph at lines 73--75
+
+[3]
+Underfull \hbox (badness 2012) in paragraph at lines 90--92
 \T1/ptm/m/n/10.95 Llama-3-8B-Instruct un-der two in-fer-ence con-
  []
 
 
-Underfull \hbox (badness 1817) in paragraph at lines 73--75
+Underfull \hbox (badness 1817) in paragraph at lines 90--92
 \T1/ptm/m/n/10.95 di-tions on the MedQA bench-mark: stan-dard
  []
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \hbox (badness 5008) in paragraph at lines 100--101
+\T1/ptm/m/n/10.95 We eval-u-ated three mod-els un-der Retrieval-
+ []
+
+
+Underfull \hbox (badness 2384) in paragraph at lines 100--101
+\T1/ptm/m/n/10.95 Pub-MedQA bench-mark us-ing BM25 re-trieval
+ []
 
 
 
 
+Underfull \hbox (badness 1024) in paragraph at lines 102--103
+\T1/ptm/m/n/10.95 purpose mod-els such as Llama3 ben-e-fit more
+ []
 
-[2] (out/research_paper.aux)
+
+Underfull \hbox (badness 6944) in paragraph at lines 108--109
+\T1/ptm/m/n/10.95 un-der zero-shot and chain-of-thought (CoT)
+ []
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 112.
+
+
+[4]
+Underfull \hbox (badness 10000) in paragraph at lines 147--148
+[]\T1/ptm/m/n/10.95 Qwen2.5-3B-Instruct per-forms sub-stan-tially
+ []
+
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+
+
+
+Underfull \hbox (badness 2221) in paragraph at lines 180--181
+\T1/ptm/m/n/10.95 achieves 73.4% ac-cu-racy on Pub-MedQA
+ []
+
+
+Underfull \hbox (badness 1394) in paragraph at lines 181--182
+\T1/ptm/b/n/10.95 hal-lu-ci-na-tion. \T1/ptm/m/n/10.95 On MedQA, CoT yields
+ []
+
+
+Underfull \hbox (badness 2245) in paragraph at lines 182--183
+[]\T1/ptm/b/n/10.95 Smaller mod-els ex-hibit sys-tem-atic pre-
+ []
+
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 190.
+(/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+)
+
+[5]
+Underfull \hbox (badness 1221) in paragraph at lines 196--198
+\T1/ptm/m/n/10.95 test newer and more strongly instruction-
+ []
+
+(out/research_paper.bbl
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 12.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 12.
+
+Underfull \hbox (badness 2495) in paragraph at lines 20--24
+[]\T1/ptm/m/n/10 Valentin Liévin, Christof-fer Ege-berg Hother, An-
+ []
+
+
+
+)
+
+[6] (out/research_paper.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `research_paper.out' has not changed.
-(rerunfilecheck)             Checksum: A4B85CCB2C63ABD29EE0B5BEB319C2D2;438.
+(rerunfilecheck)             Checksum: 4DD7D6F2CCA8D483A75CD7EB83B4B709;2798.
  ) 
 Here is how much of TeX's memory you used:
- 12865 strings out of 473832
- 207796 string characters out of 5729482
- 649878 words of memory out of 5000000
- 35806 multiletter control sequences out of 15000+600000
- 574245 words of font info for 58 fonts, out of 8000000 for 9000
+ 12978 strings out of 473832
+ 210050 string characters out of 5729482
+ 650715 words of memory out of 5000000
+ 35909 multiletter control sequences out of 15000+600000
+ 577611 words of font info for 67 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 87i,10n,93p,1103b,336s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 87i,10n,93p,1103b,422s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on out/research_paper.xdv (2 pages, 13660 bytes).
+Output written on out/research_paper.xdv (6 pages, 44468 bytes).

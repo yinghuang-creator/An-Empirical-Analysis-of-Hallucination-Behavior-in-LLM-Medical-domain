@@ -1,19 +1,31 @@
 # Fdb version 4
-["xdvipdfmx"] 1776814511.48664 "out/research_paper.xdv" "out/research_paper.pdf" "out/research_paper" 1776814511.68663 0
-  "out/research_paper.xdv" 1776814511.46631 13660 96c5c5f8d04537797923f977b40ef4e8 "xelatex"
+["bibtex out/research_paper"] 1778101036.68868 "out/research_paper.aux" "out/research_paper.bbl" "out/research_paper" 1778101037.4222 0
+  "./acl_natbib.bst" 1778100960.37212 26816 ffe5423d2019860bad9f54bc402fac15 ""
+  "./references.bib" 1778100858.16586 2951 a5cfe59b8c991ac61f6859663738aab9 ""
+  "out/research_paper.aux" 1778101037.06448 4210 1f3e972e9069e1acdad22f233527f891 "xelatex"
+  (generated)
+  "out/research_paper.bbl"
+  "out/research_paper.blg"
+  (rewritten before read)
+["xdvipdfmx"] 1778101037.21849 "out/research_paper.xdv" "out/research_paper.pdf" "out/research_paper" 1778101037.42288 0
+  "out/research_paper.xdv" 1778101037.06519 44468 8def5608b5cceebc7a6d609dc579a1af "xelatex"
   (generated)
   "out/research_paper.pdf"
   (rewritten before read)
-["xelatex"] 1776814511.20113 "/Users/yinghuang/Desktop/BU/NLP/Final project/research_paper.tex" "out/research_paper.xdv" "research_paper" 1776814511.68601 0
-  "/Users/yinghuang/Desktop/BU/NLP/Final project/research_paper.tex" 1776814510.75225 9962 9bed5e20bca808b8d1a3979d8032a589 ""
+["xelatex"] 1778101036.76067 "/Users/yinghuang/Desktop/BU/NLP/Final project/research_paper.tex" "out/research_paper.xdv" "research_paper" 1778101037.42225 0
+  "/Users/yinghuang/Desktop/BU/NLP/Final project/research_paper.tex" 1778100956.30323 24868 11481f100dd0aa1ccb1cf51b4ad74822 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr8t.tfm" 1136768653 1384 4632f5e54900a7dadbb83f555bc61e56 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/times/ptmb8t.tfm" 1136768653 6880 f19b8995b61c334d78fc734065f6b4d4 ""
+  "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/times/ptmr8c.tfm" 1136768653 1352 fa28a7e6d323c65ce7d13d5342ff6be2 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/times/ptmr8t.tfm" 1136768653 6672 e3ab9e37e925f3045c9005e6d1473d56 ""
+  "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/times/ptmri8t.tfm" 1136768653 6944 94c55ad86e6ea2826f78ba2240d50df9 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/zapfding/pzdr.tfm" 1136768653 1528 f853c4d1b4e0550255e02831fdc8496f ""
+  "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmmi10.tfm" 1136768653 1528 abec98dbc43e172678c11b3b9031252a ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm" 1136768653 1524 4414a8315f39513458b80dfc63bff03a ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmmi6.tfm" 1136768653 1512 f21f83efb36853c0b70002322c1ab3ad ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmmi8.tfm" 1136768653 1520 eccf95517727cb11801f4f1aee3a21b4 ""
+  "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr10.tfm" 1136768653 1296 45809c5a464d5f32c8f98ba97c1bb47f ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr12.tfm" 1136768653 1288 655e228510b4c2a1abe905c368440826 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr6.tfm" 1136768653 1300 b62933e007d01cfd073f79b963c01526 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr8.tfm" 1136768653 1292 21c1c5bfeaebccffdb478fd231a0997d ""
@@ -21,7 +33,9 @@
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm" 1136768653 1116 933a60c408fc0a863a92debe84b2d294 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm" 1136768653 1120 8b7d695260f3cff42e636090a8002094 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/latex-fonts/lasy10.tfm" 1136768653 520 82a3d37183f34b6eb363a161dfc002c2 ""
+  "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/latex-fonts/lasy5.tfm" 1136768653 520 d082ac03a1087bc1ec2a06e24a9f68c0 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/latex-fonts/lasy6.tfm" 1136768653 520 4889cce2180234b97cad636b6039c722 ""
+  "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/latex-fonts/lasy7.tfm" 1136768653 520 a74c6ed8cb48679fdc3ea874d9d34a7e ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/public/latex-fonts/lasy8.tfm" 1136768653 520 7bb3abb160b19e0ed6ac404bb59052b7 ""
   "/usr/local/texlive/2025/texmf-dist/tex/generic/atbegshi/atbegshi.sty" 1575674566 24708 5584a51a7101caf7e6bbf1fc27d8f7b1 ""
   "/usr/local/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty" 1576625341 40635 c40361e206be584d448876bba8a64a3b ""
@@ -77,6 +91,7 @@
   "/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/t1pcr.fd" 1137110629 798 d5895e9edc628f2be019beb2c0ec66df ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/t1ptm.fd" 1137110629 774 61d7da1e9f9e74989b196d147e623736 ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/times.sty" 1586716065 856 8e0e5c8cca7b18e0400f97f5a2b90a99 ""
+  "/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd" 1137110629 619 96f56dc5d1ef1fe1121f1cfeec70ee0c ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/refcount/refcount.sty" 1576624809 9878 9e94e8fa600d95f9c7731bb21dfb67a4 ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty" 1657483315 9714 ba3194bd52c8499b3f1e3eb91d409670 ""
   "/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.sty" 1388531844 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
@@ -85,9 +100,10 @@
   "/usr/local/texlive/2025/texmf-var/web2c/xetex/xelatex.fmt" 1741450550 5639796 b6822fbf027c6598cec2e241e0925725 ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
   "acl.sty" 1774643427.31232 11615 e2c027f483aa40e577ed34264c8b0655 ""
-  "out/research_paper.aux" 1776814511.46565 605 d7c64f7b9ae7db510ccd182fd9f5716f "xelatex"
-  "out/research_paper.out" 1776814511.46617 438 a4b85ccb2c63abd29ee0b5beb319c2d2 "xelatex"
-  "research_paper.tex" 1776814510.75225 9962 9bed5e20bca808b8d1a3979d8032a589 ""
+  "out/research_paper.aux" 1778101037.06448 4210 1f3e972e9069e1acdad22f233527f891 "xelatex"
+  "out/research_paper.bbl" 1778101036.75757 3170 a6544ce5ab8cec9f7aa850c3ce2b3805 "bibtex out/research_paper"
+  "out/research_paper.out" 1778101037.06503 2798 4dd7d6f2cca8d483a75cd7eb83b4b709 "xelatex"
+  "research_paper.tex" 1778100956.30323 24868 11481f100dd0aa1ccb1cf51b4ad74822 ""
   (generated)
   "out/research_paper.aux"
   "out/research_paper.log"

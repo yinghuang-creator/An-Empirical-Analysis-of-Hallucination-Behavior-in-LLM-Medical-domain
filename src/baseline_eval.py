@@ -27,13 +27,12 @@ def build_medqa_cot_prompt(example):
         "You are a medical expert.\n"
         "Solve the following multiple-choice medical question.\n"
         "Think briefly and carefully.\n"
-        "You must follow this exact format:\n"
-        "REASONING: <brief reasoning>\n"
-        "FINAL_ANSWER: <A/B/C/D>\n"
-        "Do not output anything after FINAL_ANSWER.\n\n"
+        "Keep the reasoning very short: at most 2 short sentences.\n"
+        "On the last line, output only one capital letter: A, B, C, or D.\n"
+        "Do not output anything after the final letter.\n\n"
         f"Question: {question}\n"
         f"Options:\n" + "\n".join(option_lines) + "\n\n"
-        "REASONING:"
+        "Brief reasoning:"
     )
     return prompt
 
@@ -123,8 +122,20 @@ def generate_answers_batch(prompts, tokenizer, model, max_new_tokens):
     prompt_len = inputs["input_ids"].shape[1]
     gen_tokens = outputs[:, prompt_len:]
     responses = tokenizer.batch_decode(gen_tokens, skip_special_tokens=True)
+    response_lengths = gen_tokens.ne(tokenizer.pad_token_id).sum(dim=1).tolist()
+    truncated_flags = []
 
-    return [resp.strip() for resp in responses]
+    for idx, length in enumerate(response_lengths):
+        if length == 0:
+            truncated_flags.append(False)
+            continue
+
+        last_generated_token = gen_tokens[idx, length - 1].item()
+        hit_token_limit = length >= max_new_tokens
+        ended_with_eos = last_generated_token == tokenizer.eos_token_id
+        truncated_flags.append(hit_token_limit and not ended_with_eos)
+
+    return [resp.strip() for resp in responses], truncated_flags
 
 
 def extract_answer_letter(text, mode="baseline"):
@@ -135,9 +146,11 @@ def extract_answer_letter(text, mode="baseline"):
 
     if mode == "cot":
         patterns = [
-            r"FINAL_ANSWER\s*:\s*([A-D])\s*$",
-            r"Therefore,\s*the correct answer is\s*\[?([A-D])\]?\s*$",
-            r"Answer\s*:\s*([A-D])\s*$",
+            r"FINAL_ANSWER\s*:\s*([A-D])\b",
+            r"Therefore,\s*the correct answer is\s*\[?([A-D])\]?\b",
+            r"The correct answer is\s*\[?([A-D])[\].:)]?\b",
+            r"Answer\s*:\s*([A-D])\b",
+            r"Final\s+answer\s*:\s*([A-D])\b",
             r"^\s*([A-D])\s*$",
             r"^\s*([A-D])[.)]?\s*$",
         ]
@@ -147,7 +160,13 @@ def extract_answer_letter(text, mode="baseline"):
             if match:
                 return match.group(1).upper()
 
-        tail = text[-80:]
+        lines = [line.strip() for line in text.splitlines() if line.strip()]
+        if lines:
+            last_line_match = re.search(r"\b([A-D])\b", lines[-1], flags=re.IGNORECASE)
+            if last_line_match:
+                return last_line_match.group(1).upper()
+
+        tail = text[-160:]
         tail_match = re.search(r"\b([A-D])\b", tail, flags=re.IGNORECASE)
         if tail_match:
             return tail_match.group(1).upper()
@@ -204,7 +223,7 @@ def recover_failed_cot_answer(example, cot_output, tokenizer, model):
         tokenizer,
         model,
         max_new_tokens=5
-    )[0]
+    )[0][0]
 
     recovered_pred = extract_answer_letter(recovery_output, mode="baseline")
     return recovered_pred, recovery_output
@@ -227,6 +246,8 @@ def evaluate_combined_batch(
         "baseline_parse_fail": 0,
         "cot_parse_fail": 0,
         "cot_recovered": 0,
+        "cot_truncated_fail": 0,
+        "cot_wrong_after_parse": 0,
         "total": 0
     }
 
@@ -240,7 +261,9 @@ def evaluate_combined_batch(
             "cot_prediction",
             "cot_is_correct",
             "cot_output",
-            "cot_recovery_output"
+            "cot_recovery_output",
+            "cot_was_truncated",
+            "cot_error_type"
         ]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
@@ -261,7 +284,7 @@ def evaluate_combined_batch(
             ]
 
             # Generate baseline outputs
-            baseline_outputs = generate_answers_batch(
+            baseline_outputs, _ = generate_answers_batch(
                 baseline_prompts,
                 tokenizer,
                 model,
@@ -269,11 +292,11 @@ def evaluate_combined_batch(
             )
 
             # Generate CoT outputs
-            cot_outputs = generate_answers_batch(
+            cot_outputs, cot_truncated_flags = generate_answers_batch(
                 cot_prompts,
                 tokenizer,
                 model,
-                max_new_tokens=128
+                max_new_tokens=192
             )
 
             # Save results
@@ -296,9 +319,16 @@ def evaluate_combined_batch(
                     mode="cot"
                 )
                 cot_recovery_output = ""
+                cot_was_truncated = cot_truncated_flags[j]
+                cot_error_type = ""
 
                 if cot_pred is None:
                     stats["cot_parse_fail"] += 1
+                    if cot_was_truncated:
+                        stats["cot_truncated_fail"] += 1
+                        cot_error_type = "truncated_parse_fail"
+                    else:
+                        cot_error_type = "format_parse_fail"
                     recovered_pred, cot_recovery_output = recover_failed_cot_answer(
                         ex,
                         cot_outputs[j],
@@ -309,8 +339,12 @@ def evaluate_combined_batch(
                     if recovered_pred is not None:
                         cot_pred = recovered_pred
                         stats["cot_recovered"] += 1
+                        cot_error_type = ""
 
                 cot_correct = (cot_pred == correct_letter)
+                if cot_pred is not None and not cot_correct and not cot_error_type:
+                    stats["cot_wrong_after_parse"] += 1
+                    cot_error_type = "wrong_answer"
 
                 writer.writerow({
                     "question_id": i + j,
@@ -321,7 +355,9 @@ def evaluate_combined_batch(
                     "cot_prediction": cot_pred,
                     "cot_is_correct": cot_correct,
                     "cot_output": cot_outputs[j],
-                    "cot_recovery_output": cot_recovery_output
+                    "cot_recovery_output": cot_recovery_output,
+                    "cot_was_truncated": cot_was_truncated,
+                    "cot_error_type": cot_error_type
                 })
 
                 stats["total"] += 1
