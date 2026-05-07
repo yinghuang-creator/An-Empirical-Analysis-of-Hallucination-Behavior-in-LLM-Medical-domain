@@ -340,39 +340,58 @@ suggesting that model scale and instruction-tuning capability are more
 important factors than domain-specific fine-tuning alone.
 
 \subsection{RQ4: RAG and Fine-Tuning Interaction}
-
-To test whether RAG and fine-tuning are complementary, we applied RAG 
-at inference time to the fine-tuned BioGPT model on PubMedQA. 
-Table~\ref{tab:rq4} reports the interaction results alongside the 
-individual conditions for comparison.
-
+ 
+We applied RAG at inference time to the fine-tuned BioGPT model on 
+PubMedQA to test whether the two interventions are complementary. 
+Table~\ref{tab:rq4} reports the results for three BioGPT conditions: 
+RAG only (base model, PubMedQA), SFT only (fine-tuned, MedQA), and 
+SFT + RAG (fine-tuned, PubMedQA with retrieval).
+ 
 \begin{table}[h!]
   \centering
   \small
   \begin{tabular}{lccc}
     \toprule
-    \textbf{Condition} & \textbf{Accuracy} & \textbf{Halluc.} & \textbf{Parse Fail} \\
+    \textbf{Condition} & \textbf{Acc.} & \textbf{Halluc.} & \textbf{Parse Fail} \\
     \midrule
-    BioGPT RAG only    & 54.4\%  & 89.1\%  & 80.0\%  \\
-    \midrule
-    BioGPT RAG only    & 54.4\%  & 89.1\%  & 80.0\%  \\
-    BioGPT SFT only    & 24.44\% & 75.56\% &  0.0\%  \\
-    BioGPT SFT + RAG   &  3.33\% & 96.67\% & 93.33\% \\
+    BioGPT RAG only  & 54.4\%  & 89.1\%  & 80.0\%  \\
+    BioGPT SFT only  & 24.44\% & 75.56\% &  0.0\%  \\
+    BioGPT SFT + RAG &  3.33\% & 96.67\% & 93.33\% \\
     \bottomrule
   \end{tabular}
-  \caption{RQ4: Interaction between fine-tuning and RAG for BioGPT 
-  on PubMedQA (450 samples).}
+  \caption{RQ4: BioGPT under RAG, SFT, and combined conditions. 
+  RAG and SFT+RAG evaluated on PubMedQA (450 samples); 
+  SFT evaluated on MedQA (450 samples).}
   \label{tab:rq4}
 \end{table}
-
-Combining fine-tuning with RAG leads to catastrophic degradation --- 
-accuracy drops to 3.33\% with a 93.33\% parse failure rate. This 
-suggests that fine-tuning on MedQA (multiple-choice format) caused the 
-model to lose the output format flexibility required for PubMedQA 
-(yes/no/maybe format). When presented with RAG context at inference 
-time, the fine-tuned model fails to generate structured responses, 
-indicating that the two interventions are incompatible in their current 
-forms for BioGPT.
+ 
+Combining fine-tuning with RAG leads to catastrophic output 
+degradation --- accuracy drops from 54.4\% (RAG only) to 3.33\% 
+(SFT + RAG), with parse failures rising from 80.0\% to 93.33\%. 
+ 
+An important methodological caveat must be noted: the SFT model was 
+fine-tuned on MedQA (multiple-choice, A/B/C/D format) and then 
+evaluated on PubMedQA (yes/no/maybe format). These are fundamentally 
+different output formats. The observed degradation therefore reflects 
+not only a potential incompatibility between RAG and fine-tuning, but 
+also a \textit{cross-task format mismatch} --- the fine-tuned model 
+learned to produce answer letters and lost the output flexibility 
+required for yes/no/maybe responses. This confounding effect limits the 
+conclusions that can be drawn about the RAG + fine-tuning interaction.
+ 
+Additionally, PubMedQA contains only 450 labeled samples in total, 
+all of which were used for evaluation. This small data set size limits 
+the statistical power and generalizability of the interaction findings.
+ 
+Despite these limitations, the result reveals a practically important 
+finding: task-specific fine-tuning can severely degrade a model's 
+output format flexibility, making it unable to adapt to new task 
+formats even when provided with retrieved context. A rigorous 
+evaluation of the RAG + fine-tuning interaction would require either 
+(1) fine-tuning on PubMedQA specifically and evaluating with and 
+without RAG on a held-out split, or (2) using a larger dataset that 
+supports both training and evaluation splits. We leave this for future 
+work.
 
 \subsection{Prediction Distribution Analysis}
 
@@ -388,60 +407,91 @@ genuine medical reasoning.
 
 % ── DISCUSSION ───────────────────────────────────────────────────────────────
 \section{Discussion}
-
+ 
 \subsection{Effect of Model Scale}
 Across all conditions, model scale and instruction-tuning capability 
 emerge as the dominant factors in hallucination reduction. 
 Llama-3-8B-Instruct consistently outperforms both BioMistral-7B and 
 BioGPT despite having no medical domain pretraining. This is consistent 
-with recent findings that large general models with strong instruction 
+with recent findings that general large models with strong instruction 
 tuning can match or exceed smaller specialized models on medical 
 benchmarks \cite{singhal2023large}. Our results suggest that investing 
 in larger, better-aligned general models may be more effective than 
-domain-specific pretraining to reduce hallucination in medical QA.
-
+domain-specific pretraining for reducing hallucination in medical QA.
+ 
 \subsection{Inference-Time vs.\ Training-Time Interventions}
 Our results reveal an important asymmetry between inference-time and 
 training-time interventions. RAG substantially reduces hallucination for 
 Llama-3-8B (28.9\% hallucination rate) but provides limited benefit for 
 smaller models. Fine-tuning improves BioGPT accuracy by 6.66 percentage 
-points and eliminates parse failures, but absolute accuracy remains 
-low. Critically, combining both interventions (SFT + RAG) leads to 
-catastrophic failure for BioGPT, suggesting that fine-tuning on a 
-specific answer format (multiple-choice letters) degrades the model's 
-ability to generalize to a different format (yes/no/maybe) even when 
-provided with retrieved context. This incompatibility highlights the 
-importance of evaluating combined interventions rather than assuming 
-they are additive.
-
-\subsection{Limitations}
-Several limitations should be noted. First, we do not have a zero-shot 
-baseline on PubMedQA for direct RAG vs.\ no-RAG comparison on the same 
-questions, which would strengthen our RQ2 conclusions. Second, 
-BioGPT's poor performance may partly reflect its lack of instruction 
-tuning rather than fundamental model limitations --- instruction-tuned 
-variants might perform significantly better. Third, our fine-tuning 
-used only 3 epochs; longer training or alternative objectives such as 
-RLHF or DPO may yield greater hallucination reductions. Finally, we use 
-BM25 retrieval with top-2 abstracts, and denser retrieval methods such 
-as MedCPT may improve RAG quality.
+points and completely eliminates parse failures (23.11\% $\rightarrow$ 
+0.00\%), demonstrating that task-specific adaptation is beneficial even 
+for small models. However, the absolute accuracy of the fine-tuned model 
+(24.44\%) remains far below zero-shot Llama-3-8B (60.4\%), suggesting 
+that model scale and instruction-tuning capability are more critical 
+factors than fine-tuning alone for hallucination reduction in medical QA.
+ 
+\subsection{Format Rigidity as a Hidden Risk of Fine-Tuning}
+A particularly important finding emerges from our RQ4 experiment: 
+task-specific fine-tuning can severely degrade a model's output format 
+flexibility. When fine-tuned BioGPT is evaluated with RAG on PubMedQA 
+(yes/no/maybe format), accuracy drops to 3.33\% with a 93.33\% parse 
+failure rate --- far worse than the base model under RAG (54.4\%). 
+The model, having been trained exclusively on MedQA multiple-choice 
+format, lost the ability to produce structured yes/no/maybe responses 
+even when provided with retrieved context.
+ 
+This finding has practical implications beyond our specific experimental 
+setup: fine-tuning a model on a fixed output format introduces format 
+rigidity that may prevent it from generalizing to other tasks at 
+inference time. Practitioners deploying fine-tuned models in multi-task 
+clinical settings should carefully evaluate format compatibility before 
+combining fine-tuning with retrieval augmentation.
+ 
+We acknowledge an important caveat: our RQ4 setup involves a 
+cross-task format mismatch, and PubMedQA's 450 labeled samples are 
+too few to support both a fine-tuning split and a reliable evaluation 
+split. A fully controlled interaction test --- fine-tuning and RAG 
+evaluation within the same format and dataset --- remains for future 
+work. Nevertheless, the format rigidity finding itself stands 
+independently of this limitation.
 
 % ── CONCLUSION ───────────────────────────────────────────────────────────────
 \section{Conclusion}
-
+ 
 We presented a controlled empirical study of hallucination behavior in 
 medical LLMs across four intervention conditions. Our key findings are: 
 (1) larger instruction-tuned models hallucinate less under RAG, with 
 Llama-3-8B achieving 73.4\% accuracy on PubMedQA; (2) CoT prompting 
 consistently degrades performance relative to zero-shot due to output 
-noise and parse failures; (3) fine-tuning BioGPT on MedQA improves 
-accuracy by 6.66 points and eliminates parse failures; and (4) 
-combining fine-tuning with RAG leads to catastrophic output degradation 
-for BioGPT, suggesting the two interventions are incompatible in their 
-current forms. These findings highlight that model scale and 
-instruction-tuning capability are more important than domain-specific 
-adaptation for hallucination reduction, and that combined interventions 
-must be carefully evaluated rather than assumed to be additive.
+noise and parse failures; (3) fine-tuning BioGPT improves accuracy by 
+6.66 percentage points and completely eliminates parse failures, though 
+absolute accuracy remains bounded by model scale; and (4) combining 
+fine-tuning with RAG reveals a format rigidity problem --- task-specific 
+fine-tuning can severely degrade output format flexibility, preventing 
+generalization to new task formats even with retrieved context. These 
+findings highlight that model scale and instruction-tuning capability 
+are more important than domain-specific adaptation for hallucination 
+reduction, and that combined interventions must be carefully evaluated 
+for format compatibility rather than assumed to be additive.
+
+% ── LIMITATIONS ──────────────────────────────────────────────────────────────
+\section{Limitations}
+ 
+Several limitations of this work should be noted. First, our RQ4 
+evaluation involves a cross-task format mismatch: BioGPT was fine-tuned 
+on MedQA (multiple-choice, A/B/C/D) but evaluated with RAG on PubMedQA 
+(yes/no/maybe). A rigorous interaction test would require fine-tuning 
+and evaluation within the same format and dataset. PubMedQA's 450 
+labeled samples are too few to support both a fine-tuning split and a 
+reliable evaluation split simultaneously, which is why we could not 
+conduct this experiment within the current study.
+ 
+Second, our fine-tuning used only 3 epochs with standard SFT; longer 
+training or alternative objectives such as RLHF or DPO may yield 
+greater hallucination reductions. Finally, we use BM25 retrieval with 
+top-2 abstracts; denser retrieval methods such as MedCPT embeddings 
+may improve RAG quality and faithfulness.
 
 % ── REFERENCES ───────────────────────────────────────────────────────────────
 \bibliography{references}
