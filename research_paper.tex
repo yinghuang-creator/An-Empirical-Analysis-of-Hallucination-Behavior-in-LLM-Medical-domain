@@ -15,7 +15,7 @@
   MS in AI, Boston University\\
   \texttt{aperez00@bu.edu} \\\And
   Dang Dinh \\
-  MS in Data Science, Boston University\\
+  MS in DS, Boston University\\
   \texttt{dddinh@bu.edu} \\\AND
   Kaveri Goel \\
   MS in AI, Boston University\\
@@ -195,27 +195,35 @@ or redundant.
 
 \subsection{Evaluation Metrics}
 
-\textbf{Accuracy} is the proportion of outputs that match the 
-gold-standard answer.
+\textbf{Accuracy} is computed as the proportion of outputs whose 
+extracted answer exactly matches the gold-standard answer. For MedQA, 
+this means the extracted letter (A--D) matches the gold answer letter. 
+For PubMedQA, this means the extracted decision (yes/no/maybe) matches 
+the gold label.
 
-\textbf{Error rate} is the proportion of outputs that are either 
-incorrect or unparseable. For MedQA conditions (zero-shot, CoT, SFT), 
-we use error rate rather than ``hallucination rate'' since there is no 
-retrieved context to assess faithfulness against --- incorrect answers 
-reflect factual errors rather than hallucination in the retrieval 
-faithfulness sense.
+\textbf{Error rate} is defined as $1 - \text{accuracy}$ over all 
+outputs including parse failures. For MedQA conditions (zero-shot, CoT, 
+SFT), we use error rate rather than ``hallucination rate'' since there 
+is no retrieved context to assess faithfulness against --- incorrect 
+answers reflect factual errors rather than hallucination in the 
+retrieval faithfulness sense.
 
 \textbf{Hallucination rate} is reserved for RAG conditions on PubMedQA, 
 where it captures outputs that are either incorrect or unfaithful to the 
-retrieved context.
+retrieved context. Parse failures are included in the hallucination 
+count since an unparseable output is clinically unusable.
 
 \textbf{Parse failure rate} is reported separately as the proportion of 
-outputs from which no structured answer (letter or yes/no/maybe) could 
-be extracted. Parse failures are counted as errors in all conditions 
-since an unparseable output is clinically unusable.
+outputs from which no structured answer could be extracted using regex 
+pattern matching. For MedQA, the extractor looks for \texttt{Answer: 
+[A-D]} or a leading letter. For PubMedQA, it looks for yes, no, or 
+maybe at the start of or within the output. Parse failures are counted 
+as errors in all conditions.
 
-\textbf{BERTScore F1} measures semantic similarity between generated 
-outputs and gold answers, serving as a secondary signal.
+\textbf{BERTScore F1} \cite{zhang2019bertscore} measures token-level 
+semantic similarity between generated outputs and reference answers 
+using contextual embeddings from RoBERTa-large. It serves as a 
+secondary signal of output quality independent of exact-match accuracy.
 
 % ── RESULTS ──────────────────────────────────────────────────────────────────
 \section{Results}
@@ -275,34 +283,56 @@ reasoning.
 
 \subsection{RQ2: Retrieval-Augmented Generation on PubMedQA}
 
-We evaluated four models under RAG conditions on PubMedQA using BM25 
-retrieval with top-2 abstracts. Table~\ref{tab:pubmedqa-rag} reports 
-the results.
+To directly evaluate whether RAG reduces hallucination, we ran both 
+zero-shot and RAG conditions on the same 450 PubMedQA questions for all 
+three models. Tables~\ref{tab:pubmedqa-zeroshot} and~\ref{tab:pubmedqa-rag} 
+report the results.
 
-\begin{table}[h]
+\begin{table}[h!]
   \centering
-  \begin{tabular}{lccc}
+  \small
+  \begin{tabular}{lcccc}
     \toprule
-    \textbf{Model} & \textbf{Acc.} & \textbf{Halluc.} & \textbf{BERT F1} \\
+    \textbf{Model} & \textbf{Acc.} & \textbf{Halluc.} & \textbf{Parse Fail} & \textbf{BERT} \\
     \midrule
-    Llama-3-8B      & 73.4\% & 28.9\% & 0.850 \\
-    BioMistral-7B   & 52.9\% & 54.9\% & 0.816 \\
-    BioGPT          & 54.4\% & 89.1\% & ---   \\
-    Qwen2.5-3B      & 19.0\% & 81.0\% & ---   \\
+    Llama-3-8B    & 56.00\% & 44.00\% &  0.00\% & 0.830 \\
+    BioMistral-7B & 46.00\% & 54.00\% & 16.22\% & 0.838 \\
+    BioGPT        & 22.89\% & 77.11\% & 57.56\% & 0.785 \\
     \bottomrule
   \end{tabular}
-  \caption{PubMedQA RAG results (450 samples for Llama-3 and 
-  BioMistral; 200 samples for Qwen2.5-3B).}
+  \caption{PubMedQA zero-shot results (450 samples per model).}
+  \label{tab:pubmedqa-zeroshot}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \small
+  \begin{tabular}{lcccc}
+    \toprule
+    \textbf{Model} & \textbf{Acc.} & \textbf{Halluc.} & \textbf{Parse Fail} & \textbf{BERT} \\
+    \midrule
+    Llama-3-8B    & 71.11\% & 28.89\% &  3.33\% & 0.853 \\
+    BioMistral-7B & 45.11\% & 54.89\% & 14.67\% & 0.820 \\
+    BioGPT        & 10.89\% & 89.11\% & 79.78\% & 0.801 \\
+    \bottomrule
+  \end{tabular}
+  \caption{PubMedQA RAG results with BM25 top-2 retrieval (450 samples per model).}
   \label{tab:pubmedqa-rag}
 \end{table}
 
-Llama-3-8B-Instruct achieves the highest accuracy and lowest 
-hallucination rate, suggesting that larger, general-purpose 
-instruction-tuned models benefit most from retrieval augmentation. 
-BioGPT and Qwen2.5-3B exhibit very high hallucination rates; inspection 
-reveals that both models overwhelmingly predict ``maybe,'' failing to 
-commit to definitive yes/no answers even when the retrieved evidence 
-supports one.
+The results reveal three distinct patterns across model tiers. For 
+Llama-3-8B-Instruct, RAG substantially improves performance --- accuracy 
+increases from 56.00\% to 71.11\% (+15.11 points) and hallucination 
+rate drops from 44.00\% to 28.89\%, with BERTScore F1 also improving 
+from 0.830 to 0.853. For BioMistral-7B, RAG has essentially no effect 
+--- accuracy changes by only $-$0.89 points (46.00\% $\rightarrow$ 
+45.11\%), suggesting that domain-pretrained models already possess the 
+parametric knowledge that retrieval provides and do not benefit from 
+additional context. For BioGPT, RAG actively degrades performance --- 
+accuracy drops from 22.89\% to 10.89\% ($-$12 points) and parse 
+failures increase from 57.56\% to 79.78\%, indicating that the retrieved 
+context confuses the model rather than helping it generate structured 
+responses.
 
 \subsection{RQ3: Effect of Fine-Tuning on Hallucination}
 
@@ -354,7 +384,7 @@ SFT + RAG (fine-tuned, PubMedQA with retrieval).
     \toprule
     \textbf{Condition} & \textbf{Acc.} & \textbf{Halluc.} & \textbf{Parse Fail} \\
     \midrule
-    BioGPT RAG only  & 54.4\%  & 89.1\%  & 80.0\%  \\
+    BioGPT RAG only  & 10.89\% & 89.11\% & 79.78\% \\
     BioGPT SFT only  & 24.44\% & 75.56\% &  0.0\%  \\
     BioGPT SFT + RAG &  3.33\% & 96.67\% & 93.33\% \\
     \bottomrule
@@ -365,33 +395,38 @@ SFT + RAG (fine-tuned, PubMedQA with retrieval).
   \label{tab:rq4}
 \end{table}
  
-Combining fine-tuning with RAG leads to catastrophic output 
-degradation --- accuracy drops from 54.4\% (RAG only) to 3.33\% 
-(SFT + RAG), with parse failures rising from 80.0\% to 93.33\%. 
- 
+BioGPT struggles under all conditions on PubMedQA --- zero-shot 
+achieves only 22.89\% (Table~\ref{tab:pubmedqa-zeroshot}), RAG alone 
+drops this further to 10.89\%, and SFT + RAG collapses to 3.33\% with 
+a 93.33\% parse failure rate. The consistent degradation across 
+conditions suggests that BioGPT fundamentally lacks the capacity for 
+structured yes/no/maybe output, independent of whether retrieval or 
+fine-tuning is applied.
+
 An important methodological caveat must be noted: the SFT model was 
 fine-tuned on MedQA (multiple-choice, A/B/C/D format) and then 
 evaluated on PubMedQA (yes/no/maybe format). These are fundamentally 
-different output formats. The observed degradation therefore reflects 
-not only a potential incompatibility between RAG and fine-tuning, but 
+different output formats. The observed degradation in the SFT + RAG 
+condition therefore reflects not only BioGPT's limited capacity, but 
 also a \textit{cross-task format mismatch} --- the fine-tuned model 
 learned to produce answer letters and lost the output flexibility 
-required for yes/no/maybe responses. This confounding effect limits the 
-conclusions that can be drawn about the RAG + fine-tuning interaction.
+required for yes/no/maybe responses. This confounding effect limits 
+the conclusions that can be drawn about the RAG + fine-tuning 
+interaction specifically.
  
 Additionally, PubMedQA contains only 450 labeled samples in total, 
-all of which were used for evaluation. This small data set size limits 
-the statistical power and generalizability of the interaction findings.
- 
+all of which were used for evaluation. This small dataset size limits 
+statistical power and generalizability.
+
 Despite these limitations, the result reveals a practically important 
-finding: task-specific fine-tuning can severely degrade a model's 
-output format flexibility, making it unable to adapt to new task 
-formats even when provided with retrieved context. A rigorous 
-evaluation of the RAG + fine-tuning interaction would require either 
-(1) fine-tuning on PubMedQA specifically and evaluating with and 
-without RAG on a held-out split, or (2) using a larger dataset that 
-supports both training and evaluation splits. We leave this for future 
-work.
+finding: task-specific fine-tuning on a fixed output format introduces 
+format rigidity that compounds existing model limitations, making 
+the combined SFT + RAG approach worse than either intervention alone. 
+A rigorous evaluation of the RAG + fine-tuning interaction would 
+require either (1) fine-tuning on PubMedQA specifically and evaluating 
+with and without RAG on a held-out split, or (2) using a larger dataset 
+that supports both training and evaluation splits. We leave this for 
+future work.
 
 \subsection{Prediction Distribution Analysis}
 
@@ -422,39 +457,45 @@ domain-specific pretraining for reducing hallucination in medical QA.
 \subsection{Inference-Time vs.\ Training-Time Interventions}
 Our results reveal an important asymmetry between inference-time and 
 training-time interventions. RAG substantially reduces hallucination for 
-Llama-3-8B (28.9\% hallucination rate) but provides limited benefit for 
-smaller models. Fine-tuning improves BioGPT accuracy by 6.66 percentage 
-points and completely eliminates parse failures (23.11\% $\rightarrow$ 
-0.00\%), demonstrating that task-specific adaptation is beneficial even 
-for small models. However, the absolute accuracy of the fine-tuned model 
-(24.44\%) remains far below zero-shot Llama-3-8B (60.4\%), suggesting 
-that model scale and instruction-tuning capability are more critical 
-factors than fine-tuning alone for hallucination reduction in medical QA.
+Llama-3-8B (+15.11 accuracy points, hallucination drops from 44.00\% to 
+28.89\%) but has no measurable effect on BioMistral-7B ($-$0.89 points) 
+and actively hurts BioGPT ($-$12 points). This suggests that RAG is 
+only effective when the model has sufficient instruction-following 
+capacity to leverage retrieved context. Fine-tuning improves BioGPT 
+accuracy by 6.66 percentage points and completely eliminates parse 
+failures (23.11\% $\rightarrow$ 0.00\%), demonstrating that 
+task-specific adaptation is beneficial even for small models. However, 
+the absolute accuracy of the fine-tuned model (24.44\%) remains far 
+below zero-shot Llama-3-8B (60.4\%), suggesting that model scale and 
+instruction-tuning capability are more critical factors than fine-tuning 
+alone for hallucination reduction in medical QA.
  
 \subsection{Format Rigidity as a Hidden Risk of Fine-Tuning}
-A particularly important finding emerges from our RQ4 experiment: 
-task-specific fine-tuning can severely degrade a model's output format 
-flexibility. When fine-tuned BioGPT is evaluated with RAG on PubMedQA 
-(yes/no/maybe format), accuracy drops to 3.33\% with a 93.33\% parse 
-failure rate --- far worse than the base model under RAG (54.4\%). 
-The model, having been trained exclusively on MedQA multiple-choice 
-format, lost the ability to produce structured yes/no/maybe responses 
-even when provided with retrieved context.
- 
+A particularly important finding emerges from our RQ4 experiment. 
+BioGPT struggles on PubMedQA under all conditions --- zero-shot 
+(22.89\%), RAG (10.89\%), and SFT + RAG (3.33\%) --- revealing that 
+the model fundamentally lacks the capacity for structured yes/no/maybe 
+output. Critically, applying SFT compounds this limitation: the model, 
+having been trained exclusively on MedQA multiple-choice format, 
+further loses output flexibility and achieves a 93.33\% parse failure 
+rate under SFT + RAG.
+
 This finding has practical implications beyond our specific experimental 
 setup: fine-tuning a model on a fixed output format introduces format 
 rigidity that may prevent it from generalizing to other tasks at 
-inference time. Practitioners deploying fine-tuned models in multi-task 
+inference time, and can compound existing model weaknesses rather than 
+mitigate them. Practitioners deploying fine-tuned models in multi-task 
 clinical settings should carefully evaluate format compatibility before 
 combining fine-tuning with retrieval augmentation.
- 
+
 We acknowledge an important caveat: our RQ4 setup involves a 
 cross-task format mismatch, and PubMedQA's 450 labeled samples are 
 too few to support both a fine-tuning split and a reliable evaluation 
 split. A fully controlled interaction test --- fine-tuning and RAG 
 evaluation within the same format and dataset --- remains for future 
-work. Nevertheless, the format rigidity finding itself stands 
-independently of this limitation.
+work. Nevertheless, the finding that SFT compounds rather than 
+alleviates BioGPT's structured output failures stands independently 
+of this limitation.
 
 % ── CONCLUSION ───────────────────────────────────────────────────────────────
 \section{Conclusion}
@@ -462,7 +503,7 @@ independently of this limitation.
 We presented a controlled empirical study of hallucination behavior in 
 medical LLMs across four intervention conditions. Our key findings are: 
 (1) larger instruction-tuned models hallucinate less under RAG, with 
-Llama-3-8B achieving 73.4\% accuracy on PubMedQA; (2) CoT prompting 
+Llama-3-8B achieving 71.11\% accuracy on PubMedQA; (2) CoT prompting 
 consistently degrades performance relative to zero-shot due to output 
 noise and parse failures; (3) fine-tuning BioGPT improves accuracy by 
 6.66 percentage points and completely eliminates parse failures, though 
