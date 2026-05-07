@@ -1,67 +1,76 @@
-\begin{thebibliography}{7}
+\begin{thebibliography}{13}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[Ji et~al.(2023)Ji, Lee, Frieske, Yu, Su, Xu, Ishii, Bang, Madotto, and
-  Fung]{ji2023survey}
-Ziwei Ji, Nayeon Lee, Rita Frieske, Tiezheng Yu, Dan Su, Yan Xu, Etsuko Ishii,
-  Ye~Jin Bang, Andrea Madotto, and Pascale Fung.
+\bibitem[Ji et~al.(2023)Ji, Lee, Frieske, Yu, Su, Xu, Ishii, Bang, Madotto, and Fung]{ji2023survey}
+Ziwei Ji, Nayeon Lee, Rita Frieske, Tiezheng Yu, Dan Su, Yan Xu, Etsuko Ishii, Ye~Jin Bang, Andrea Madotto, and Pascale Fung.
 \newblock Survey of hallucination in natural language generation.
 \newblock \emph{ACM Computing Surveys}, 55\penalty0 (12):\penalty0 1--38, 2023.
 \newblock \doi{10.1145/3571730}.
 
-\bibitem[Lewis et~al.(2020)Lewis, Perez, Piktus, Petroni, Karpukhin, Goyal,
-  K{\"u}ttler, Lewis, Yih, and Rockt{\"a}schel]{lewis2020retrieval}
-Patrick Lewis, Ethan Perez, Aleksandara Piktus, Fabio Petroni, Vladimir
-  Karpukhin, Naman Goyal, Heinrich K{\"u}ttler, Mike Lewis, Wen-tau Yih, and
-  Tim Rockt{\"a}schel.
-\newblock Retrieval-augmented generation for knowledge-intensive nlp tasks.
-\newblock In \emph{Advances in Neural Information Processing Systems},
-  volume~33, pages 9459--9474, 2020.
+\bibitem[Jin et~al.(2021)Jin, Pan, Oufattole, et~al.]{jin2021disease}
+Di~Jin, Eileen Pan, Nassim Oufattole, et~al.
+\newblock What disease does this patient have? a large-scale open domain question answering dataset from medical exams.
+\newblock \emph{Applied Sciences}, 11\penalty0 (14):\penalty0 6421, 2021.
 
-\bibitem[Li{\'e}vin et~al.(2024)Li{\'e}vin, Hother, Motzfeldt, and
-  Winther]{lievin2024medical}
-Valentin Li{\'e}vin, Christoffer~Egeberg Hother, Andreas~Geert Motzfeldt, and
-  Ole Winther.
+\bibitem[Jin et~al.(2019)Jin, Dhingra, Liu, Cohen, and Lu]{jin2019pubmedqa}
+Qiao Jin, Bhuwan Dhingra, Zhiyong Liu, William Cohen, and Xingyu Lu.
+\newblock Pubmedqa: A biomedical research question answering dataset.
+\newblock In \emph{Proceedings of EMNLP-IJCNLP}, pages 2567--2577, 2019.
+
+\bibitem[Labrak et~al.(2024)Labrak, Bazoge, Morin, et~al.]{labrak2024biomistral}
+Yanis Labrak, Adrien Bazoge, Emmanuel Morin, et~al.
+\newblock Biomistral: A collection of open-source pretrained large language models for medical domains.
+\newblock \emph{arXiv preprint arXiv:2402.10373}, 2024.
+
+\bibitem[Lewis et~al.(2020)Lewis, Perez, Piktus, Petroni, Karpukhin, Goyal, K{\"u}ttler, Lewis, Yih, and Rockt{\"a}schel]{lewis2020retrieval}
+Patrick Lewis, Ethan Perez, Aleksandara Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich K{\"u}ttler, Mike Lewis, Wen-tau Yih, and Tim Rockt{\"a}schel.
+\newblock Retrieval-augmented generation for knowledge-intensive nlp tasks.
+\newblock In \emph{Advances in Neural Information Processing Systems}, volume~33, pages 9459--9474, 2020.
+
+\bibitem[Li{\'e}vin et~al.(2024)Li{\'e}vin, Hother, Motzfeldt, and Winther]{lievin2024medical}
+Valentin Li{\'e}vin, Christoffer~Egeberg Hother, Andreas~Geert Motzfeldt, and Ole Winther.
 \newblock Can large language models reason about medical questions?
 \newblock \emph{Patterns}, 5\penalty0 (3):\penalty0 100943, 2024.
 \newblock \doi{10.1016/j.patter.2024.100943}.
 
-\bibitem[Maynez et~al.(2020)Maynez, Narayan, Bohnet, and
-  McDonald]{maynez2020faithfulness}
+\bibitem[Luo et~al.(2022)Luo, Sun, Xia, et~al.]{luo2022biogpt}
+Renqian Luo, Liai Sun, Yingce Xia, et~al.
+\newblock Biogpt: generative pre-trained transformer for biomedical text generation and mining.
+\newblock \emph{Briefings in Bioinformatics}, 23\penalty0 (6), 2022.
+
+\bibitem[Maynez et~al.(2020)Maynez, Narayan, Bohnet, and McDonald]{maynez2020faithfulness}
 Joshua Maynez, Shashi Narayan, Bernd Bohnet, and Ryan McDonald.
 \newblock On faithfulness and factuality in abstractive summarization.
-\newblock In \emph{Proceedings of the 58th Annual Meeting of the Association
-  for Computational Linguistics}, pages 1906--1919. Association for
-  Computational Linguistics, 2020.
+\newblock In \emph{Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics}, pages 1906--1919. Association for Computational Linguistics, 2020.
 \newblock \doi{10.18653/v1/2020.acl-main.173}.
 
 \bibitem[Pal et~al.(2023)Pal, Umapathi, and Sankarasubbu]{pal2023medhalt}
 Ankit Pal, Logesh~Kumar Umapathi, and Malaikannan Sankarasubbu.
-\newblock Med-halt: Medical domain hallucination test for large language
-  models.
-\newblock In \emph{Proceedings of the 27th Conference on Computational Natural
-  Language Learning}, pages 314--334. Association for Computational
-  Linguistics, 2023.
+\newblock Med-halt: Medical domain hallucination test for large language models.
+\newblock In \emph{Proceedings of the 27th Conference on Computational Natural Language Learning}, pages 314--334. Association for Computational Linguistics, 2023.
 
-\bibitem[Wang et~al.(2023)Wang, Wei, Schuurmans, Le, Chi, Narang, Chowdhery,
-  and Zhou]{wang2023selfconsistency}
-Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc~V. Le, Ed~H. Chi, Sharan Narang,
-  Aakanksha Chowdhery, and Denny Zhou.
-\newblock Self-consistency improves chain of thought reasoning in language
-  models.
+\bibitem[Singhal et~al.(2023)Singhal, Azizi, Tu, et~al.]{singhal2023large}
+Karan Singhal, Shekoofeh Azizi, Tao Tu, et~al.
+\newblock Large language models encode clinical knowledge.
+\newblock \emph{Nature}, 620:\penalty0 172--180, 2023.
+
+\bibitem[Wang et~al.(2023)Wang, Wei, Schuurmans, Le, Chi, Narang, Chowdhery, and Zhou]{wang2023selfconsistency}
+Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc~V. Le, Ed~H. Chi, Sharan Narang, Aakanksha Chowdhery, and Denny Zhou.
+\newblock Self-consistency improves chain of thought reasoning in language models.
 \newblock In \emph{International Conference on Learning Representations}, 2023.
 
-\bibitem[Wei et~al.(2022)Wei, Wang, Schuurmans, Bosma, Ichter, Xia, Chi, Le,
-  and Zhou]{wei2022chain}
-Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Brian Ichter, Fei Xia,
-  Ed~Chi, Quoc Le, and Denny Zhou.
-\newblock Chain-of-thought prompting elicits reasoning in large language
-  models.
-\newblock In \emph{Advances in Neural Information Processing Systems},
-  volume~35, pages 24824--24837, 2022.
+\bibitem[Wei et~al.(2022)Wei, Wang, Schuurmans, Bosma, Ichter, Xia, Chi, Le, and Zhou]{wei2022chain}
+Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Brian Ichter, Fei Xia, Ed~Chi, Quoc Le, and Denny Zhou.
+\newblock Chain-of-thought prompting elicits reasoning in large language models.
+\newblock In \emph{Advances in Neural Information Processing Systems}, volume~35, pages 24824--24837, 2022.
+
+\bibitem[Zhang et~al.(2020)Zhang, Kishore, Wu, Weinberger, and Artzi]{zhang2019bertscore}
+Tianyi Zhang, Varsha Kishore, Felix Wu, Kilian~Q Weinberger, and Yoav Artzi.
+\newblock Bertscore: Evaluating text generation with bert.
+\newblock In \emph{International Conference on Learning Representations}, 2020.
 
 \end{thebibliography}

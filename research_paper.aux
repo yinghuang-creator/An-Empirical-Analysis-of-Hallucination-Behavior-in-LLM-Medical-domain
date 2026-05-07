@@ -3,42 +3,71 @@
 \providecommand\hyper@newdestlabel[2]{}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
-\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
 \citation{ji2023survey}
 \citation{maynez2020faithfulness}
 \citation{lievin2024medical}
 \citation{pal2023medhalt}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{1}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Hallucination in Large Language Models}{1}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Medical Question Answering and Clinical Reasoning}{1}{subsection.2.2}\protected@file@percent }
 \citation{wei2022chain}
 \citation{wang2023selfconsistency}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}{section.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Hallucination in Large Language Models}{2}{subsection.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Medical Question Answering and Clinical Reasoning}{2}{subsection.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Chain-of-Thought Prompting}{2}{subsection.2.3}\protected@file@percent }
 \citation{lewis2020retrieval}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Retrieval-Augmented Generation}{3}{subsection.2.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}Progress}{3}{section.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Methods}{3}{subsection.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Preliminary Findings}{4}{subsection.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}RAG Preliminary Findings}{4}{subsection.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4}Results}{4}{section.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}MedQA: Zero-Shot vs.\ Chain-of-Thought}{4}{subsection.4.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces MedQA results for Llama-3-8B-Instruct (500 samples).}}{4}{table.caption.1}\protected@file@percent }
+\citation{singhal2023large}
+\citation{luo2022biogpt}
+\citation{labrak2024biomistral}
+\citation{jin2021disease}
+\citation{jin2019pubmedqa}
+\citation{labrak2024biomistral}
+\citation{luo2022biogpt}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Chain-of-Thought Prompting}{2}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Retrieval-Augmented Generation}{2}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Fine-Tuning for Medical NLP}{2}{subsection.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Methods}{2}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Datasets}{2}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Models}{2}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Experimental Conditions}{2}{subsection.3.3}\protected@file@percent }
+\citation{zhang2019bertscore}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Evaluation Metrics}{3}{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Results}{3}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}RQ1: Zero-Shot and Chain-of-Thought on MedQA}{3}{subsection.4.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces MedQA results for Llama-3-8B-Instruct (500 samples).}}{3}{table.caption.1}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{tab:medqa-llama}{{1}{4}{MedQA results for Llama-3-8B-Instruct (500 samples)}{table.caption.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces MedQA results for Qwen2.5-3B-Instruct (200 samples).}}{5}{table.caption.2}\protected@file@percent }
-\newlabel{tab:medqa-qwen}{{2}{5}{MedQA results for Qwen2.5-3B-Instruct (200 samples)}{table.caption.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}PubMedQA: Retrieval-Augmented Generation}{5}{subsection.4.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces PubMedQA RAG results. Llama-3 and BioMistral evaluated on 450 samples; Qwen2.5-3B-Instruct on 200 samples.}}{5}{table.caption.3}\protected@file@percent }
-\newlabel{tab:pubmedqa-rag}{{3}{5}{PubMedQA RAG results. Llama-3 and BioMistral evaluated on 450 samples; Qwen2.5-3B-Instruct on 200 samples}{table.caption.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Prediction Distribution Analysis}{5}{subsection.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Summary of Findings}{5}{subsection.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Future Work}{5}{subsection.4.5}\protected@file@percent }
+\newlabel{tab:medqa-llama}{{1}{3}{MedQA results for Llama-3-8B-Instruct (500 samples)}{table.caption.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces MedQA results for Qwen2.5-3B-Instruct (200 samples).}}{3}{table.caption.2}\protected@file@percent }
+\newlabel{tab:medqa-qwen}{{2}{3}{MedQA results for Qwen2.5-3B-Instruct (200 samples)}{table.caption.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}RQ2: Retrieval-Augmented Generation on PubMedQA}{3}{subsection.4.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces PubMedQA zero-shot results (450 samples per model).}}{4}{table.caption.3}\protected@file@percent }
+\newlabel{tab:pubmedqa-zeroshot}{{3}{4}{PubMedQA zero-shot results (450 samples per model)}{table.caption.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces PubMedQA RAG results with BM25 top-2 retrieval (450 samples per model).}}{4}{table.caption.4}\protected@file@percent }
+\newlabel{tab:pubmedqa-rag}{{4}{4}{PubMedQA RAG results with BM25 top-2 retrieval (450 samples per model)}{table.caption.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}RQ3: Effect of Fine-Tuning on Hallucination}{4}{subsection.4.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces RQ3: BioGPT on MedQA before and after fine-tuning (450 matched samples).}}{4}{table.caption.5}\protected@file@percent }
+\newlabel{tab:rq3}{{5}{4}{RQ3: BioGPT on MedQA before and after fine-tuning (450 matched samples)}{table.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}RQ4: RAG and Fine-Tuning Interaction}{4}{subsection.4.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces RQ4: BioGPT under RAG, SFT, and combined conditions. RAG and SFT+RAG evaluated on PubMedQA (450 samples); SFT evaluated on MedQA (450 samples).}}{4}{table.caption.6}\protected@file@percent }
+\newlabel{tab:rq4}{{6}{4}{RQ4: BioGPT under RAG, SFT, and combined conditions. RAG and SFT+RAG evaluated on PubMedQA (450 samples); SFT evaluated on MedQA (450 samples)}{table.caption.6}{}}
+\citation{singhal2023large}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Prediction Distribution Analysis}{5}{subsection.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Discussion}{5}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Effect of Model Scale}{5}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Inference-Time vs.\ Training-Time Interventions}{5}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Format Rigidity as a Hidden Risk of Fine-Tuning}{5}{subsection.5.3}\protected@file@percent }
 \bibdata{references}
 \bibcite{ji2023survey}{{1}{2023}{{Ji et~al.}}{{Ji, Lee, Frieske, Yu, Su, Xu, Ishii, Bang, Madotto, and Fung}}}
-\bibcite{lewis2020retrieval}{{2}{2020}{{Lewis et~al.}}{{Lewis, Perez, Piktus, Petroni, Karpukhin, Goyal, K{\"u}ttler, Lewis, Yih, and Rockt{\"a}schel}}}
-\bibcite{lievin2024medical}{{3}{2024}{{Li{\'e}vin et~al.}}{{Li{\'e}vin, Hother, Motzfeldt, and Winther}}}
-\bibcite{maynez2020faithfulness}{{4}{2020}{{Maynez et~al.}}{{Maynez, Narayan, Bohnet, and McDonald}}}
-\bibcite{pal2023medhalt}{{5}{2023}{{Pal et~al.}}{{Pal, Umapathi, and Sankarasubbu}}}
-\bibcite{wang2023selfconsistency}{{6}{2023}{{Wang et~al.}}{{Wang, Wei, Schuurmans, Le, Chi, Narang, Chowdhery, and Zhou}}}
-\bibcite{wei2022chain}{{7}{2022}{{Wei et~al.}}{{Wei, Wang, Schuurmans, Bosma, Ichter, Xia, Chi, Le, and Zhou}}}
-\gdef \@abspage@last{6}
+\bibcite{jin2021disease}{{2}{2021}{{Jin et~al.}}{{Jin, Pan, Oufattole, et~al.}}}
+\bibcite{jin2019pubmedqa}{{3}{2019}{{Jin et~al.}}{{Jin, Dhingra, Liu, Cohen, and Lu}}}
+\bibcite{labrak2024biomistral}{{4}{2024}{{Labrak et~al.}}{{Labrak, Bazoge, Morin, et~al.}}}
+\bibcite{lewis2020retrieval}{{5}{2020}{{Lewis et~al.}}{{Lewis, Perez, Piktus, Petroni, Karpukhin, Goyal, K{\"u}ttler, Lewis, Yih, and Rockt{\"a}schel}}}
+\bibcite{lievin2024medical}{{6}{2024}{{Li{\'e}vin et~al.}}{{Li{\'e}vin, Hother, Motzfeldt, and Winther}}}
+\bibcite{luo2022biogpt}{{7}{2022}{{Luo et~al.}}{{Luo, Sun, Xia, et~al.}}}
+\bibcite{maynez2020faithfulness}{{8}{2020}{{Maynez et~al.}}{{Maynez, Narayan, Bohnet, and McDonald}}}
+\bibcite{pal2023medhalt}{{9}{2023}{{Pal et~al.}}{{Pal, Umapathi, and Sankarasubbu}}}
+\bibcite{singhal2023large}{{10}{2023}{{Singhal et~al.}}{{Singhal, Azizi, Tu, et~al.}}}
+\bibcite{wang2023selfconsistency}{{11}{2023}{{Wang et~al.}}{{Wang, Wei, Schuurmans, Le, Chi, Narang, Chowdhery, and Zhou}}}
+\bibcite{wei2022chain}{{12}{2022}{{Wei et~al.}}{{Wei, Wang, Schuurmans, Bosma, Ichter, Xia, Chi, Le, and Zhou}}}
+\bibcite{zhang2019bertscore}{{13}{2020}{{Zhang et~al.}}{{Zhang, Kishore, Wu, Weinberger, and Artzi}}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{6}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Limitations}{6}{section.7}\protected@file@percent }
+\gdef \@abspage@last{7}
