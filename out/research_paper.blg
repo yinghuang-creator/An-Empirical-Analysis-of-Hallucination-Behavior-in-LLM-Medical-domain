@@ -3,44 +3,44 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: research_paper.aux
 The style file: acl_natbib.bst
 Database file #1: references.bib
-You've used 7 entries,
+You've used 13 entries,
             2773 wiz_defined-function locations,
-            638 strings with 6748 characters,
-and the built_in function-call counts, 5521 in all, are:
-= -- 472
-> -- 453
-< -- 6
-+ -- 151
-- -- 144
-* -- 496
-:= -- 830
-add.period$ -- 26
-call.type$ -- 7
-change.case$ -- 69
-chr.to.int$ -- 7
-cite$ -- 14
-duplicate$ -- 206
-empty$ -- 348
-format.name$ -- 151
-if$ -- 1163
+            671 strings with 7825 characters,
+and the built_in function-call counts, 8786 in all, are:
+= -- 743
+> -- 701
+< -- 7
++ -- 235
+- -- 222
+* -- 780
+:= -- 1340
+add.period$ -- 44
+call.type$ -- 13
+change.case$ -- 109
+chr.to.int$ -- 13
+cite$ -- 26
+duplicate$ -- 347
+empty$ -- 587
+format.name$ -- 235
+if$ -- 1841
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 7
-newline$ -- 46
-num.names$ -- 28
-pop$ -- 143
+missing$ -- 13
+newline$ -- 76
+num.names$ -- 52
+pop$ -- 224
 preamble$ -- 1
-purify$ -- 62
+purify$ -- 96
 quote$ -- 0
-skip$ -- 197
+skip$ -- 312
 stack$ -- 0
-substring$ -- 208
-swap$ -- 58
-text.length$ -- 6
+substring$ -- 297
+swap$ -- 77
+text.length$ -- 7
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 77
+type$ -- 143
 warning$ -- 0
-while$ -- 36
+while$ -- 60
 width$ -- 0
-write$ -- 107
+write$ -- 183
