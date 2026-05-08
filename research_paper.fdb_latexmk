@@ -1,19 +1,19 @@
 # Fdb version 4
-["bibtex research_paper"] 1778187681.59557 "research_paper.aux" "research_paper.bbl" "research_paper" 1778187681.96361 0
+["bibtex research_paper"] 1778204455.03374 "research_paper.aux" "research_paper.bbl" "research_paper" 1778204455.37202 0
   "./acl_natbib.bst" 1778102119.44257 26816 ffe5423d2019860bad9f54bc402fac15 ""
   "./references.bib" 1778187388.0919 4591 b90f16f96d0e565b59185d70a1de59a4 ""
-  "research_paper.aux" 1778187681.91603 7054 4f3b45f4f2fd97e75fef1fb6a4b00f02 "pdflatex"
+  "research_paper.aux" 1778204455.32563 6852 dfcb18652c3ef641a5430754c7323716 "pdflatex"
   (generated)
   "research_paper.bbl"
   "research_paper.blg"
   (rewritten before read)
-["pdflatex"] 1778187681.60855 "/Users/aidanperez/Web/An-Empirical-Analysis-of-Hallucination-Behavior-in-LLM-Medical-domain/research_paper.tex" "research_paper.pdf" "research_paper" 1778187681.9637 0
+["pdflatex"] 1778204455.04782 "/Users/aidanperez/Web/An-Empirical-Analysis-of-Hallucination-Behavior-in-LLM-Medical-domain/research_paper.tex" "research_paper.pdf" "research_paper" 1778204455.37212 0
   "/Users/aidanperez/Library/texlive/2026basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1776821807 79547 3aec702a8e5936f6ef99b0e37dff0cf7 ""
   "/Users/aidanperez/Library/texmf/fonts/tfm/adobe/courier/pcrr8r.tfm" 1136768653 1292 bd42be2f344128bff6d35d98474adfe3 ""
   "/Users/aidanperez/Library/texmf/fonts/tfm/adobe/courier/pcrr8t.tfm" 1136768653 1384 4632f5e54900a7dadbb83f555bc61e56 ""
   "/Users/aidanperez/Library/texmf/fonts/type1/urw/courier/ucrr8a.pfb" 1136849748 45758 19968a0990191524e34e1994d4a31cb6 ""
   "/Users/aidanperez/Library/texmf/fonts/vf/adobe/courier/pcrr8t.vf" 1136768653 2184 8475af1b9cfa983db5f46f5ed4b8f9f7 ""
-  "/Users/aidanperez/Web/An-Empirical-Analysis-of-Hallucination-Behavior-in-LLM-Medical-domain/research_paper.tex" 1778187680.0376 26821 ec2805b340096b0fbdb32c8e8d2166ca ""
+  "/Users/aidanperez/Web/An-Empirical-Analysis-of-Hallucination-Behavior-in-LLM-Medical-domain/research_paper.tex" 1778204454.523 27315 a7efab992353186a26de27e0d85eb13e ""
   "/usr/local/texlive/2026basic/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2026basic/texmf-dist/fonts/tfm/adobe/times/ptmb8r.tfm" 1136768653 4524 6bce29db5bc272ba5f332261583fee9c ""
   "/usr/local/texlive/2026basic/texmf-dist/fonts/tfm/adobe/times/ptmb8t.tfm" 1136768653 6880 f19b8995b61c334d78fc734065f6b4d4 ""
@@ -124,10 +124,10 @@
   "/usr/local/texlive/2026basic/texmf-var/web2c/pdftex/pdflatex.fmt" 1772405612 2966183 588a2f29d0aaf280e3a142a37c2dd621 ""
   "/usr/local/texlive/2026basic/texmf.cnf" 1772405582 628 bbc09d6d38872d53c11bb48dc9b14e88 ""
   "acl.sty" 1775354270.44043 11615 e2c027f483aa40e577ed34264c8b0655 ""
-  "research_paper.aux" 1778187681.91603 7054 4f3b45f4f2fd97e75fef1fb6a4b00f02 "pdflatex"
-  "research_paper.bbl" 1778187681.60701 4879 6b1f144f150b58cd1ee0f7eabb41cbf5 "bibtex research_paper"
-  "research_paper.out" 1778187681.91651 4485 5160473aa7cad4382a54f5a5ec21315e "pdflatex"
-  "research_paper.tex" 1778187680.0376 26821 ec2805b340096b0fbdb32c8e8d2166ca ""
+  "research_paper.aux" 1778204455.32563 6852 dfcb18652c3ef641a5430754c7323716 "pdflatex"
+  "research_paper.bbl" 1778204455.04634 4879 6b1f144f150b58cd1ee0f7eabb41cbf5 "bibtex research_paper"
+  "research_paper.out" 1778204455.32629 4632 080a608efeaa37a9c0cbc0759d7f5d4b "pdflatex"
+  "research_paper.tex" 1778204454.523 27315 a7efab992353186a26de27e0d85eb13e ""
   (generated)
   "research_paper.aux"
   "research_paper.log"
